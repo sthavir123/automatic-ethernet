@@ -1,34 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
 import React , {Component, ChangeEvent,useState } from 'react';
-//export var text,selected,setText,setSelected;
-
-// export function useArrayState(initial = []) {
-//   const array = useMemo(() => initial, [])
-//   const [refresh, setRefresh] = useState(0)
-//   const cb = useCallback((f) => {
-//     f(array)
-//     setRefresh(it => ++it)
-//   }, [])
-
-//   return [array, cb]
-// }
 
 function App() {
   
-  // function push(data) {
-  //   updateItems(it => it.push(data))
-  // }
-  // function remove(index) {
-  //   updateItems(it => it.splice(index, 1))
-  // }
-
-  // function clear() {
-  //   updateItems(it => it.length = 0)
-  // }
-
-
   const [text, setText] = useState([]);
+  const [search,setSearch] = useState("");
   //[selected,setSelected] = useState([]);
   
   const showFile = async (e) => {
@@ -41,7 +18,7 @@ function App() {
       var temp_lst = [];
       temp.map(data=>{
         
-       temp_lst = [...temp_lst,{val:data,line:count,checked:false}];
+       temp_lst = [...temp_lst,{val:data,line:count,checked:false,props:{}}];
        count++; 
       });
       //console.log(temp_lst);
@@ -70,15 +47,16 @@ function App() {
         <input type="file" onChange={(e) => showFile(e)}/>
         <div className='rowA'>
           <div>
+          <input type='text' onChange = {(e)=>{setSearch(e.target.value)}}/>  
           <div className='scrollView'>
             {
               
-              text.map(data=>(
+              text.filter(e=>e.val.includes(search)).map(data=>(
                 <>
                 
                 <input type='checkbox' onChange={(e)=> handleChange(e,data)}/>
                 <label>
-                  {data.line+ "  "+ data.val} 
+                  {data.line+ "\t"+ data.val} 
                 </label>
                 <br/>
                 </>
@@ -88,7 +66,7 @@ function App() {
           </div>
           <div>
           {
-          text.filter(e=>e.checked).map(data =>(
+          text.filter(e => e.checked).map(data =>(
               <>
                 <p>{data.val}</p>
                 <br/>

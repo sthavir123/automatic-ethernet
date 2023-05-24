@@ -39,13 +39,12 @@
 }
 
 .rowA {
-    display: flex;
+    display: block;
     flex-direction: row;
 }
 
 .scrollView {
     text-align: left;
-    text-size-adjust: 10px;
     height: 300px;
     width: 50%;
     white-space: nowrap;
