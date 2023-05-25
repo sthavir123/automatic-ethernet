@@ -18,7 +18,7 @@ function App() {
       var temp_lst = [];
       temp.map(data=>{
         
-       temp_lst = [...temp_lst,{val:data,line:count,checked:false,props:{}}];
+       temp_lst = [...temp_lst,{val:data,line:count,checked:false,props_keys:[""],props_results:[""]}];
        count++; 
       });
       //console.log(temp_lst);
@@ -31,14 +31,14 @@ function App() {
   const handleChange =  async (e,data) => {
     //do this to get around refrences
     const temp = text.slice(0);
-    temp.map(content=>{
-      if(content.line === data.line){
-        content.checked = e.target.checked;
-      }
-    });
+    
+    temp[data.line].checked = e.target.checked;
+    //Object.entries
     setText(temp);
-    console.log(text);
+    
   }
+
+
 
   return (
     <div className="App">
@@ -69,7 +69,41 @@ function App() {
           text.filter(e => e.checked).map(data =>(
               <>
                 <p>{data.val}</p>
-                <br/>
+                
+                {
+                  
+                  data.props_results.map((key,index)=>
+                    <>
+                    <p><input type="text" onChange={async (e)=>{data.props_keys[index] = e.target.value;
+                      
+                    }}/>
+                    <input type="text" onChange={async (e)=>{data.props_results[index] = e.target.value;
+                      console.log(data);
+                    }}/>
+ 
+                    <button onClick={async(e)=>{
+                      const temp = text.splice(0);
+
+                      temp[data.line].props_keys = temp[data.line].props_keys.concat([""]);
+                      temp[data.line].props_results = temp[data.line].props_results.concat([""]);
+                      setText(temp);
+                      console.log(temp);
+                    }}>Add</button></p>
+                    </>
+                  )
+                }
+                {
+                  <button onClick={async (e)=> {
+                      
+                      const temp = text.splice(0);
+                      temp[data.line].props_keys = data.props_keys;
+                      temp[data.line].props_results = data.props_results;
+                      setText(temp); 
+                      //console.log(temp); 
+                    }}>Submit</button>
+                }
+
+
               </>
                 
             ))}
