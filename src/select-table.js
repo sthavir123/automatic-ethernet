@@ -120,5 +120,5 @@ class SelectTableComponent extends React.Component {
     );
   }
 }
-///vvjvpijv
+
 export default SelectTableComponent;
