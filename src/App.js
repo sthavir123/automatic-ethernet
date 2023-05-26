@@ -69,7 +69,7 @@ function App() {
             }
             
           </div>
-          <div>
+          <div className='values'>
           {
           text.filter(e => e.checked).map(data =>(
               <>
@@ -132,7 +132,7 @@ function App() {
             }
             
           </div>
-          <div>
+          <div className='values'>
           {
           text.filter(e => e.checked).map(data =>(
               <>
