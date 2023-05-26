@@ -1,3 +1,7 @@
+            
+            
+
+
 import logo from './logo.svg';
 import './App.css';
 import React , {Component, ChangeEvent,useState } from 'react';
@@ -6,6 +10,7 @@ function App() {
   
   const [text, setText] = useState([]);
   const [search,setSearch] = useState("");
+  const [search1,setSearch1] = useState("");
   //[selected,setSelected] = useState([]);
   
   const showFile = async (e) => {
@@ -46,12 +51,12 @@ function App() {
       <body>
         <input type="file" onChange={(e) => showFile(e)}/>
         <div className='rowA'>
-          <div>
+          <div className='child'>
           <input type='text' onChange = {(e)=>{setSearch(e.target.value)}}/>  
           <div className='scrollView'>
             {
               
-              text.filter(e=>e.val.includes(search)).map(data=>(
+              text.filter(e=>e.val.toLowerCase().includes(search)).map(data=>(
                 <>
                 
                 <input type='checkbox' onChange={(e)=> handleChange(e,data)}/>
@@ -99,7 +104,7 @@ function App() {
                       temp[data.line].props_keys = data.props_keys;
                       temp[data.line].props_results = data.props_results;
                       setText(temp); 
-                      //console.log(temp); 
+                      console.log(temp); 
                     }}>Submit</button>
                 }
 
@@ -109,9 +114,66 @@ function App() {
             ))}
           </div>
           </div> 
-          <div>
-
+          <div className='child'>
+          <input type='text' onChange = {(e)=>{setSearch(e.target.value)}}/> 
+          <div className='scrollView'>
+            {
+              
+              text.filter(e=>e.val.includes("")).map(data=>(
+                <>
+                
+                
+                <label>
+                  {data.line+ "\t"+ data.val} 
+                </label>
+                <br/>
+                </>
+              ))
+            }
+            
           </div>
+          <div>
+          {
+          text.filter(e => e.checked).map(data =>(
+              <>
+                <p>{data.val}</p>
+                
+                {
+                  
+                  data.props_results.map((key,index)=>
+                    <>
+                    <p>{data.props_keys[index]} {data.props_results[index]}
+                      
+ 
+                    {/* <button onClick={async(e)=>{
+                      const temp = text.splice(0);
+
+                      temp[data.line].props_keys = temp[data.line].props_keys.concat([""]);
+                      temp[data.line].props_results = temp[data.line].props_results.concat([""]);
+                      setText(temp);
+                      console.log(temp);
+                    }}>Add</button> */}
+                    </p>
+                    </>
+                  )
+                }
+                {
+                  // <button onClick={async (e)=> {
+                      
+                  //     const temp = text.splice(0);
+                  //     temp[data.line].props_keys = data.props_keys;
+                  //     temp[data.line].props_results = data.props_results;
+                  //     setText(temp); 
+                  //     //console.log(temp); 
+                  //   }}>Submit</button>
+                }
+
+
+              </>
+                
+            ))}
+          </div>
+          </div>       
         </div>
       </body>
 
