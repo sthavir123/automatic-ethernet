@@ -11,7 +11,7 @@ function App() {
   const [text, setText] = useState([]);
   const [search,setSearch] = useState("");
   const [search1,setSearch1] = useState("");
-  //[selected,setSelected] = useState([]);
+  
   
   const showFile = async (e) => {
     
