@@ -1,5 +1,5 @@
 {
-    "SHORT-NAME":"root",
+    
     
     "<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2c45e1cd340>" : {
         "SHORT-NAME": "TxSPG_CCCM_Ethernet_Ctrl_V_PDUContainers",

@@ -1,6 +1,7 @@
 
 import './App.css';
 import React , {Component, ChangeEvent,useState } from 'react';
+import { Tree1 } from './tree';
 
 function App() {
   
@@ -50,20 +51,7 @@ function App() {
           <div className='child'>
           <input type='text' onChange = {(e)=>{setSearch(e.target.value)}}/>  
           <div className='scrollView'>
-            {
-              
-              text.filter(e=>e.val.toLowerCase().includes(search)).map(data=>(
-                <>
-                
-                <input type='checkbox' onChange={(e)=> handleChange(e,data)}/>
-                <label>
-                  {data.line+ "\t"+ data.val} 
-                </label>
-                <br/>
-                </>
-              ))
-            }
-            
+           <Tree1/>
           </div>
           <div className='values'>
           {

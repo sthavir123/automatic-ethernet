@@ -20,10 +20,15 @@ export default class Container extends Component {
     this.setState({ data })
   }
 
+  onchange = (currentNode,selectedNodes) =>{
+    console.log(currentNode);
+    console.log(selectedNodes);
+  }
+
   render() {
     return (
     <div>
-      <DropdownTreeSelect data={this.state.data} />
+      <DropdownTreeSelect data={this.state.data} onChange = {this.onchange} />
       <button onClick={this.checkAll}>Check all</button>
       <button onClick={this.uncheckAll}>Uncheck all</button>
     </div>

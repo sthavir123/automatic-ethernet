@@ -77,6 +77,7 @@ export class Tree1 extends Component {
         />
        <div>
           <Container data={this.state.data} />
+          
       </div>                      
     </div>)
   }
