@@ -1,8 +1,4 @@
-            
-            
 
-
-import logo from './logo.svg';
 import './App.css';
 import React , {Component, ChangeEvent,useState } from 'react';
 
@@ -24,7 +20,7 @@ function App() {
       temp.map(data=>{
         
        temp_lst = [...temp_lst,{val:data,line:count,checked:false,props_keys:[""],props_results:[""]}];
-       count++; 
+       count++;  
       });
       //console.log(temp_lst);
       setText(temp_lst);
