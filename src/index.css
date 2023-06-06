@@ -174,5 +174,5 @@ body {
 
 .checkbox-item.simple-select,
 .radio-item.simple-select {
-  display: none
+  display: none;
 }

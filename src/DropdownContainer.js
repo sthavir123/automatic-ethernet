@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DropdownTreeSelect from 'react-dropdown-tree-select';
+import isEqual from 'lodash/isEqual'
 
 export default class Container extends Component {
   constructor(props){
@@ -7,31 +8,22 @@ export default class Container extends Component {
     this.state = { data: props.data }
   }
 
-
-  uncheckAll = () => {
-    const data = this.state.data
-    data[0].checked = false
-    this.setState({data})
+  componentWillReceiveProps = (nextProps) => {
+    if(!isEqual(nextProps.data, this.state.data)) {
+      this.setState({ data: nextProps.data })
+    }
   }
 
-  checkAll = () => {
-    const data = this.state.data
-    data[0].checked = true
-    this.setState({ data })
-  }
-
-  onchange = (currentNode,selectedNodes) =>{
-    console.log(currentNode);
-    console.log(selectedNodes);
+  shouldComponentUpdate = (nextProps) => {
+    return !isEqual(nextProps.data, this.state.data)
   }
 
   render() {
+    const { data, ...rest } = this.props
     return (
-    <div>
-      <DropdownTreeSelect data={this.state.data} onChange = {this.onchange} />
-      <button onClick={this.checkAll}>Check all</button>
-      <button onClick={this.uncheckAll}>Uncheck all</button>
-    </div>
+      
+        <DropdownTreeSelect data={this.state.data} {...rest} mode='radioSelect'/>
+      
     )
   }
 }

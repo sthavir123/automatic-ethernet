@@ -1,7 +1,7 @@
 
 import './App.css';
 import React , {Component, ChangeEvent,useState } from 'react';
-import { Tree1 } from './tree';
+import { Tree } from './tree';
 
 function App() {
   
@@ -51,7 +51,7 @@ function App() {
           <div className='child'>
           <input type='text' onChange = {(e)=>{setSearch(e.target.value)}}/>  
           <div className='scrollView'>
-           <Tree1/>
+           <Tree/>
           </div>
           <div className='values'>
           {
