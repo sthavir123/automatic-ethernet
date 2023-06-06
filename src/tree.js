@@ -4,6 +4,7 @@ import transform from "./transform.json";
 import Container from './DropdownContainer';
 import './App.css';
 import { Input } from './input';
+import UploadFile from './UploadFile';
 
 const startkeys = ["<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2c45e1cd340>","<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2c45e1cd300>"];
 
@@ -76,14 +77,7 @@ export class Tree extends Component {
 
         <div className='rowA'>
           <div className='child'>
-            <input type="file"/>
-            {/* <button
-        onClick={async (e)=>{
-          console.log(JSON.stringify(await transformJson(sample["<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2018c4a4480>"],"<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2018c4a4480>")));
-          //console.log(selected);
-        }}
-      
-        >get Json</button> */}
+            <UploadFile/>
             <Container data={transform} onChange={this.onChange} />
            
           </div>
