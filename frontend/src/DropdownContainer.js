@@ -15,6 +15,7 @@ export default class Container extends Component {
   }
 
   shouldComponentUpdate = (nextProps) => {
+   
     return !isEqual(nextProps.data, this.state.data)
   }
 
@@ -22,7 +23,7 @@ export default class Container extends Component {
     const { data, ...rest } = this.props
     return (
       
-        <DropdownTreeSelect data={this.state.data} {...rest} mode='radioSelect'/>
+        <DropdownTreeSelect data={this.state.data} {...rest} />
       
     )
   }

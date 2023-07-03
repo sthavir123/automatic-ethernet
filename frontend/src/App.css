@@ -40,16 +40,21 @@
 
 .rowA {
     display: block;
-    flex-direction: row;
+    flex-direction: column;
     overflow-inline: scroll;
     overflow-block: scroll;
     
 }
 
-.child{
-    width: 50%;
-    display: inline-block;
-    vertical-align: text-top;
+.child1{
+    height: 50%;
+    display: block;
+    
+}
+.child2{
+    height: 30%;
+    display: block;
+    
 }
 
 .scrollView {

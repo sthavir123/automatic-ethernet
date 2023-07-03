@@ -7,7 +7,7 @@ import { Tree } from './tree';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Tree />
+    <Tree id='tree'/>
   </React.StrictMode>
 );
 

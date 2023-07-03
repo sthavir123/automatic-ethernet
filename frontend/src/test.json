@@ -1,615 +1,87 @@
 {
-    "label": "RestraintsHMI_Pdu",
-    "LENGTH": "8",
-    "UNUSED-BIT-PATTERN": "0",
-    "CONTAINED-I-PDU-PROPS": {
-        "COLLECTION-SEMANTICS": "LAST-IS-BEST",
-        "OFFSET": "8",
-        "TIMEOUT": "0.02",
-        "TRIGGER": "ALWAYS"
-    },
-    "I-SIGNAL-TO-I-PDU-MAPPING": [
+"I-SIGNAL": [
+    [
         {
-            "label": "isUSASeatBeltReminder_0_RestraintsHMI_Pdu_mtx",
-            "I-SIGNAL-REF": {
-                "label": "isUSASeatBeltReminder_0_RestraintsHMI_Pdu",
-                "DATA-TYPE-POLICY": "OVERRIDE",
-                "LENGTH": "2",
-                "SYSTEM-SIGNAL-REF": {
-                    "label": "USASeatBeltReminder",
-                    "DYNAMIC-LENGTH": "false"
-                },
-                "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                    "BASE-TYPE-REF": {
-                        "label": "UINT2",
-                        "CATEGORY": "FIXED_LENGTH",
-                        "BASE-TYPE-SIZE": "2",
-                        "BASE-TYPE-ENCODING": "NONE"
-                    },
-                    "COMPU-METHOD-REF": {
-                        "label": "USASeatBeltReminderCoding",
-                        "CATEGORY": "TEXTTABLE",
-                        "COMPU-SCALE": [
-                            {
-                                "SHORT-LABEL": "USASeatBeltReminderCoding_Reserved_0",
-                                "LOWER-LIMIT": "0",
-                                "UPPER-LIMIT": "0"
-                            },
-                            {
-                                "SHORT-LABEL": "USASeatBeltReminderCoding_Front_Passenger_Seat_Empty_1",
-                                "LOWER-LIMIT": "1",
-                                "UPPER-LIMIT": "1"
-                            },
-                            {
-                                "SHORT-LABEL": "USASeatBeltReminderCoding_Front_Passenger_Seat_Occupied_2",
-                                "LOWER-LIMIT": "2",
-                                "UPPER-LIMIT": "2"
-                            },
-                            {
-                                "SHORT-LABEL": "USASeatBeltReminderCoding_Reserved_3",
-                                "LOWER-LIMIT": "3",
-                                "UPPER-LIMIT": "3"
-                            }
-                        ],
-                        "COMPU-CONST": [
-                            {
-                                "VT": "Reserved"
-                            },
-                            {
-                                "VT": "Reserved"
-                            }
-                        ]
-                    }
+            "label": "isFuelLevelIndicatedHS_0_EVC_CCCM_PR10_Pdu_PduGwISL_80",
+            "LENGTH": "10",
+            "SYSTEM-SIGNAL": [
+                {
+                    "label": "FuelLevelIndicatedHS",
+                    "L-2": "Level of fuel in tank as displayed on the fuel guage. Measured via the fuel level sensors in the tank, converted via ADCs in the IC and then damped using an algorithm."
                 }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "49",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "isMPACOSState_mtx",
-            "I-SIGNAL-REF": {
-                "label": "isMPACOSState",
-                "DATA-TYPE-POLICY": "OVERRIDE",
-                "LENGTH": "2",
-                "SYSTEM-SIGNAL-REF": {
-                    "label": "MPACOSState",
-                    "DYNAMIC-LENGTH": "false"
-                },
-                "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                    "BASE-TYPE-REF": {
-                        "label": "UINT2",
-                        "CATEGORY": "FIXED_LENGTH",
-                        "BASE-TYPE-SIZE": "2",
-                        "BASE-TYPE-ENCODING": "NONE"
-                    },
-                    "COMPU-METHOD-REF": {
-                        "label": "MPACOSStateCoding",
-                        "CATEGORY": "TEXTTABLE",
-                        "COMPU-SCALE": [
-                            {
-                                "SHORT-LABEL": "MPACOSStateCoding_Indeterminate_0",
-                                "LOWER-LIMIT": "0",
-                                "UPPER-LIMIT": "0"
-                            },
-                            {
-                                "SHORT-LABEL": "MPACOSStateCoding_PAB_on_1",
-                                "LOWER-LIMIT": "1",
-                                "UPPER-LIMIT": "1"
-                            },
-                            {
-                                "SHORT-LABEL": "MPACOSStateCoding_PAB_off_2",
-                                "LOWER-LIMIT": "2",
-                                "UPPER-LIMIT": "2"
-                            },
-                            {
-                                "SHORT-LABEL": "MPACOSStateCoding_Fault_3",
-                                "LOWER-LIMIT": "3",
-                                "UPPER-LIMIT": "3"
-                            }
-                        ],
-                        "COMPU-CONST": [
-                            {
-                                "VT": "Indeterminate"
-                            },
-                            {
-                                "VT": "Fault"
-                            }
-                        ]
-                    }
+            ],
+            "SW-BASE-TYPE": [
+                {
+                    "label": "UINT10",
+                    "CATEGORY": "FIXED_LENGTH",
+                    "BASE-TYPE-SIZE": "10",
+                    "BASE-TYPE-ENCODING": "NONE"
                 }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "55",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "isOccupantClassStatus_mtx",
-            "I-SIGNAL-REF": {
-                "label": "isOccupantClassStatus",
-                "DATA-TYPE-POLICY": "OVERRIDE",
-                "LENGTH": "2",
-                "SYSTEM-SIGNAL-REF": {
-                    "label": "OccupantClassStatus",
-                    "DYNAMIC-LENGTH": "false"
-                },
-                "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                    "BASE-TYPE-REF": {
-                        "label": "UINT2",
-                        "CATEGORY": "FIXED_LENGTH",
-                        "BASE-TYPE-SIZE": "2",
-                        "BASE-TYPE-ENCODING": "NONE"
-                    },
-                    "COMPU-METHOD-REF": {
-                        "label": "OccupantClassStatus",
-                        "CATEGORY": "TEXTTABLE",
-                        "COMPU-SCALE": [
-                            {
-                                "SHORT-LABEL": "OccupantClassStatus_Empty_0",
-                                "LOWER-LIMIT": "0",
-                                "UPPER-LIMIT": "0"
-                            },
-                            {
-                                "SHORT-LABEL": "OccupantClassStatus_Error_1",
-                                "LOWER-LIMIT": "1",
-                                "UPPER-LIMIT": "1"
-                            },
-                            {
-                                "SHORT-LABEL": "OccupantClassStatus_Occupied_Inhibit_2",
-                                "LOWER-LIMIT": "2",
-                                "UPPER-LIMIT": "2"
-                            },
-                            {
-                                "SHORT-LABEL": "OccupantClassStatus_Occupied_Allow_3",
-                                "LOWER-LIMIT": "3",
-                                "UPPER-LIMIT": "3"
-                            }
-                        ],
-                        "COMPU-CONST": [
-                            {
-                                "VT": "Empty"
-                            },
-                            {
-                                "VT": "Error"
-                            }
-                        ]
-                    }
-                }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "53",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "isRILRequestStatus_mrx",
-            "I-SIGNAL-REF": {
-                "label": "isRILRequestStatus",
-                "DATA-TYPE-POLICY": "OVERRIDE",
-                "LENGTH": "2",
-                "SYSTEM-SIGNAL-REF": {
-                    "label": "RILRequestStatus",
-                    "DYNAMIC-LENGTH": "false"
-                },
-                "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                    "BASE-TYPE-REF": {
-                        "label": "UINT2",
-                        "CATEGORY": "FIXED_LENGTH",
-                        "BASE-TYPE-SIZE": "2",
-                        "BASE-TYPE-ENCODING": "NONE"
-                    },
-                    "COMPU-METHOD-REF": {
-                        "label": "RILRequestStatus",
-                        "CATEGORY": "TEXTTABLE",
-                        "COMPU-SCALE": [
-                            {
-                                "SHORT-LABEL": "RILRequestStatus_RIL_Request_Off_0",
-                                "LOWER-LIMIT": "0",
-                                "UPPER-LIMIT": "0"
-                            },
-                            {
-                                "SHORT-LABEL": "RILRequestStatus_Reserved_1",
-                                "LOWER-LIMIT": "1",
-                                "UPPER-LIMIT": "1"
-                            },
-                            {
-                                "SHORT-LABEL": "RILRequestStatus_RIL_Request_Plant_Mode_2",
-                                "LOWER-LIMIT": "2",
-                                "UPPER-LIMIT": "2"
-                            },
-                            {
-                                "SHORT-LABEL": "RILRequestStatus_RIL_Requested_ON_3",
-                                "LOWER-LIMIT": "3",
-                                "UPPER-LIMIT": "3"
-                            }
-                        ],
-                        "COMPU-CONST": {
-                            "VT": "Reserved"
-                        }
-                    }
-                }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "51",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "isPIEECUState_mrx",
-            "I-SIGNAL-REF": {
-                "label": "isPIEECUState",
-                "DATA-TYPE-POLICY": "OVERRIDE",
-                "LENGTH": "1",
-                "SYSTEM-SIGNAL-REF": {
-                    "label": "PIEECUState",
-                    "DYNAMIC-LENGTH": "false"
-                },
-                "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                    "BASE-TYPE-REF": {
-                        "label": "BOOLEAN",
-                        "CATEGORY": "FIXED_LENGTH",
-                        "BASE-TYPE-SIZE": "1",
-                        "BASE-TYPE-ENCODING": "BOOLEAN"
-                    },
-                    "COMPU-METHOD-REF": {
-                        "label": "PIEECUState",
-                        "CATEGORY": "TEXTTABLE",
-                        "COMPU-SCALE": [
-                            {
-                                "SHORT-LABEL": "PIEECUState_Self_Test_0",
-                                "LOWER-LIMIT": "0",
-                                "UPPER-LIMIT": "0"
-                            },
-                            {
-                                "SHORT-LABEL": "PIEECUState_Cyclic_Test_1",
-                                "LOWER-LIMIT": "1",
-                                "UPPER-LIMIT": "1"
-                            }
-                        ]
-                    }
-                }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "40",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "isPIETextMsg1_mrx",
-            "I-SIGNAL-REF": {
-                "label": "isPIETextMsg1",
-                "DATA-TYPE-POLICY": "OVERRIDE",
-                "LENGTH": "1",
-                "SYSTEM-SIGNAL-REF": {
-                    "label": "PIETextMsg1",
-                    "DYNAMIC-LENGTH": "false"
-                },
-                "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                    "BASE-TYPE-REF": {
-                        "label": "BOOLEAN",
-                        "CATEGORY": "FIXED_LENGTH",
-                        "BASE-TYPE-SIZE": "1",
-                        "BASE-TYPE-ENCODING": "BOOLEAN"
-                    },
-                    "COMPU-METHOD-REF": {
-                        "label": "TextMsg1",
-                        "CATEGORY": "TEXTTABLE",
-                        "COMPU-SCALE": [
-                            {
-                                "SHORT-LABEL": "TextMsg1_No_Message_1_should_be_displayed_0",
-                                "LOWER-LIMIT": "0",
-                                "UPPER-LIMIT": "0"
-                            },
-                            {
-                                "SHORT-LABEL": "TextMsg1_Display_Text_Message_1_1",
-                                "LOWER-LIMIT": "1",
-                                "UPPER-LIMIT": "1"
-                            }
-                        ]
-                    }
-                }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "41",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "igPIEStatusGP_PT_mtx",
-            "I-SIGNAL-GROUP-REF": {
-                "label": "igPIEStatusGP_PT",
-                "SYSTEM-SIGNAL-GROUP-REF": {
-                    "label": "PIEStatusGP_PT",
-                    "SYSTEM-SIGNAL-REFS": {
-                        "SYSTEM-SIGNAL-REF": [
-                            {
-                                "label": "PIEECUState",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "PIETextMsg1",
-                                "DYNAMIC-LENGTH": "false"
-                            }
-                        ]
-                    }
-                },
-                "I-SIGNAL-REFS": {
-                    "I-SIGNAL-REF": [
-                        {
-                            "label": "isPIEECUState",
-                            "DATA-TYPE-POLICY": "OVERRIDE",
-                            "LENGTH": "1",
-                            "SYSTEM-SIGNAL-REF": {
-                                "label": "PIEECUState",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                                "BASE-TYPE-REF": {
-                                    "label": "BOOLEAN",
-                                    "CATEGORY": "FIXED_LENGTH",
-                                    "BASE-TYPE-SIZE": "1",
-                                    "BASE-TYPE-ENCODING": "BOOLEAN"
-                                },
-                                "COMPU-METHOD-REF": {
-                                    "label": "PIEECUState",
-                                    "CATEGORY": "TEXTTABLE",
-                                    "COMPU-SCALE": [
-                                        {
-                                            "SHORT-LABEL": "PIEECUState_Self_Test_0",
-                                            "LOWER-LIMIT": "0",
-                                            "UPPER-LIMIT": "0"
-                                        },
-                                        {
-                                            "SHORT-LABEL": "PIEECUState_Cyclic_Test_1",
-                                            "LOWER-LIMIT": "1",
-                                            "UPPER-LIMIT": "1"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "label": "isPIETextMsg1",
-                            "DATA-TYPE-POLICY": "OVERRIDE",
-                            "LENGTH": "1",
-                            "SYSTEM-SIGNAL-REF": {
-                                "label": "PIETextMsg1",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                                "BASE-TYPE-REF": {
-                                    "label": "BOOLEAN",
-                                    "CATEGORY": "FIXED_LENGTH",
-                                    "BASE-TYPE-SIZE": "1",
-                                    "BASE-TYPE-ENCODING": "BOOLEAN"
-                                },
-                                "COMPU-METHOD-REF": {
-                                    "label": "TextMsg1",
-                                    "CATEGORY": "TEXTTABLE",
-                                    "COMPU-SCALE": [
-                                        {
-                                            "SHORT-LABEL": "TextMsg1_No_Message_1_should_be_displayed_0",
-                                            "LOWER-LIMIT": "0",
-                                            "UPPER-LIMIT": "0"
-                                        },
-                                        {
-                                            "SHORT-LABEL": "TextMsg1_Display_Text_Message_1_1",
-                                            "LOWER-LIMIT": "1",
-                                            "UPPER-LIMIT": "1"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
+            ],
+            "COMPU-METHOD": [
+                {
+                    "label": "FuelLevelIndicated",
+                    "CATEGORY": "LINEAR",
+                    "LOWER-LIMIT": "0",
+                    "UPPER-LIMIT": "1023",
+                    "COMPU-NUMERATOR": [
+                        "0.0",
+                        "0.2"
+                    ],
+                    "COMPU-DENOMINATOR": [
+                        "1"
                     ]
                 }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "40",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "isOCSPassSeatOccupied_mtx",
-            "I-SIGNAL-REF": {
-                "label": "isOCSPassSeatOccupied",
-                "DATA-TYPE-POLICY": "OVERRIDE",
-                "LENGTH": "8",
-                "SYSTEM-SIGNAL-REF": {
-                    "label": "OCSPassSeatOccupied",
-                    "DYNAMIC-LENGTH": "false"
-                },
-                "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                    "BASE-TYPE-REF": {
-                        "label": "UINT8",
-                        "CATEGORY": "FIXED_LENGTH",
-                        "BASE-TYPE-SIZE": "8",
-                        "BASE-TYPE-ENCODING": "NONE"
-                    },
-                    "COMPU-METHOD-REF": {
-                        "label": "OCSPassSeatOccupiedCoding",
-                        "CATEGORY": "TEXTTABLE",
-                        "COMPU-SCALE": [
-                            {
-                                "SHORT-LABEL": "OCSPassSeatOccupiedCoding_Empty_0",
-                                "LOWER-LIMIT": "0",
-                                "UPPER-LIMIT": "0"
-                            },
-                            {
-                                "SHORT-LABEL": "OCSPassSeatOccupiedCoding_Occupied_1",
-                                "LOWER-LIMIT": "1",
-                                "UPPER-LIMIT": "1"
-                            }
-                        ],
-                        "COMPU-CONST": [
-                            {
-                                "VT": "Empty"
-                            },
-                            {
-                                "VT": "Occupied"
-                            }
-                        ]
-                    }
-                }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "63",
-            "TRANSFER-PROPERTY": "PENDING"
-        },
-        {
-            "label": "igOCS_A_PT_Grp_1_RestraintsHMI_Pdu_mtx",
-            "I-SIGNAL-GROUP-REF": {
-                "label": "igOCS_A_PT_Grp_1_RestraintsHMI_Pdu",
-                "SYSTEM-SIGNAL-GROUP-REF": {
-                    "label": "OCS_A_PT_Grp",
-                    "SYSTEM-SIGNAL-REFS": {
-                        "SYSTEM-SIGNAL-REF": [
-                            {
-                                "label": "OCSLevel1Error",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "OCS_A_Checksum",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "USASeatBeltReminder",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "OCSLevel2Error",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "OCSPassSeatOccupied",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "VehicleCalibrationId",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "OCSPassWeightEst",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "VehicleMYCalibrationId",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            {
-                                "label": "OCSSigGpCounter",
-                                "DYNAMIC-LENGTH": "false"
-                            }
-                        ]
-                    }
-                },
-                "I-SIGNAL-REFS": {
-                    "I-SIGNAL-REF": [
-                        {
-                            "label": "isOCSPassSeatOccupied",
-                            "DATA-TYPE-POLICY": "OVERRIDE",
-                            "LENGTH": "8",
-                            "SYSTEM-SIGNAL-REF": {
-                                "label": "OCSPassSeatOccupied",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                                "BASE-TYPE-REF": {
-                                    "label": "UINT8",
-                                    "CATEGORY": "FIXED_LENGTH",
-                                    "BASE-TYPE-SIZE": "8",
-                                    "BASE-TYPE-ENCODING": "NONE"
-                                },
-                                "COMPU-METHOD-REF": {
-                                    "label": "OCSPassSeatOccupiedCoding",
-                                    "CATEGORY": "TEXTTABLE",
-                                    "COMPU-SCALE": [
-                                        {
-                                            "SHORT-LABEL": "OCSPassSeatOccupiedCoding_Empty_0",
-                                            "LOWER-LIMIT": "0",
-                                            "UPPER-LIMIT": "0"
-                                        },
-                                        {
-                                            "SHORT-LABEL": "OCSPassSeatOccupiedCoding_Occupied_1",
-                                            "LOWER-LIMIT": "1",
-                                            "UPPER-LIMIT": "1"
-                                        }
-                                    ],
-                                    "COMPU-CONST": [
-                                        {
-                                            "VT": "Empty"
-                                        },
-                                        {
-                                            "VT": "Occupied"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "label": "isUSASeatBeltReminder_0_RestraintsHMI_Pdu",
-                            "DATA-TYPE-POLICY": "OVERRIDE",
-                            "LENGTH": "2",
-                            "SYSTEM-SIGNAL-REF": {
-                                "label": "USASeatBeltReminder",
-                                "DYNAMIC-LENGTH": "false"
-                            },
-                            "SW-DATA-DEF-PROPS-CONDITIONAL": {
-                                "BASE-TYPE-REF": {
-                                    "label": "UINT2",
-                                    "CATEGORY": "FIXED_LENGTH",
-                                    "BASE-TYPE-SIZE": "2",
-                                    "BASE-TYPE-ENCODING": "NONE"
-                                },
-                                "COMPU-METHOD-REF": {
-                                    "label": "USASeatBeltReminderCoding",
-                                    "CATEGORY": "TEXTTABLE",
-                                    "COMPU-SCALE": [
-                                        {
-                                            "SHORT-LABEL": "USASeatBeltReminderCoding_Reserved_0",
-                                            "LOWER-LIMIT": "0",
-                                            "UPPER-LIMIT": "0"
-                                        },
-                                        {
-                                            "SHORT-LABEL": "USASeatBeltReminderCoding_Front_Passenger_Seat_Empty_1",
-                                            "LOWER-LIMIT": "1",
-                                            "UPPER-LIMIT": "1"
-                                        },
-                                        {
-                                            "SHORT-LABEL": "USASeatBeltReminderCoding_Front_Passenger_Seat_Occupied_2",
-                                            "LOWER-LIMIT": "2",
-                                            "UPPER-LIMIT": "2"
-                                        },
-                                        {
-                                            "SHORT-LABEL": "USASeatBeltReminderCoding_Reserved_3",
-                                            "LOWER-LIMIT": "3",
-                                            "UPPER-LIMIT": "3"
-                                        }
-                                    ],
-                                    "COMPU-CONST": [
-                                        {
-                                            "VT": "Reserved"
-                                        },
-                                        {
-                                            "VT": "Reserved"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ]
-                }
-            },
-            "PACKING-BYTE-ORDER": "MOST-SIGNIFICANT-BYTE-FIRST",
-            "START-POSITION": "49",
-            "TRANSFER-PROPERTY": "PENDING"
+            ]
         }
     ],
-    "SDG": {
-        "SD": "DeferredInCom"
-    },
-    "DATA-FILTER": {
-        "DATA-FILTER-TYPE": "ALWAYS"
-    },
-    "TIME-OFFSET": {
-        "VALUE": "0.0"
-    },
-    "TIME-PERIOD": {
-        "VALUE": "0.01"
+    {
+        "label": "isFuelLevelIndicatedQFHS_0_EVC_CCCM_PR10_Pdu_PduGwISL_80",
+        "LENGTH": "2",
+        "SYSTEM-SIGNAL": [
+            {
+                "label": "FuelLevelIndicatedQFHS",
+                "L-2": "Quality factor of FuelLevelIndicated.\r\n\r\n"
+            }
+        ],
+        "SW-BASE-TYPE": [
+            {
+                "label": "UINT2",
+                "CATEGORY": "FIXED_LENGTH",
+                "BASE-TYPE-SIZE": "2",
+                "BASE-TYPE-ENCODING": "NONE"
+            }
+        ],
+        "COMPU-METHOD": [
+            {
+                "label": "QualityFactor",
+                "CATEGORY": "TEXTTABLE",
+                "SHORT-LABEL": [
+                    "QualityFactor_The_accuracy_of_the_data_is_undefinable_0",
+                    "QualityFactor_Data_is_temporarily_undefinable_evaluation_in_progress_1",
+                    "QualityFactor_The_accuracy_of_the_data_is_not_within_specification_2",
+                    "QualityFactor_The_data_is_calculated_with_the_specified_accuracy_3"
+                ],
+                "LOWER-LIMIT": [
+                    "0",
+                    "1",
+                    "2",
+                    "3"
+                ],
+                "UPPER-LIMIT": [
+                    "0",
+                    "1",
+                    "2",
+                    "3"
+                ],
+                "VT": [
+                    "The accuracy of the data is undefinable",
+                    "Data is temporarily undefinable, evaluation in progress",
+                    "The accuracy of the data is not within specification",
+                    "The data is calculated with the specified accuracy"
+                ]
+            }
+        ]
     }
-},
+]
+}

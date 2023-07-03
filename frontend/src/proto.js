@@ -1,22 +1,21 @@
 import axios from "axios";
 import React from "react";
-import { parse, protobuf } from "protobufjs";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { Table } from "@mantine/core";
+
 const baseURL = "http://127.0.0.1:8000/proto";
 const baseURL2 = "http://127.0.0.1:8000/proto/set"
 
 export default function Proto() {
   const [post, setPost] = React.useState(null);
-  const [text, setText] = React.useState("");
+  // const [text, setText] = React.useState("");
   const [inputs, setInputs] = React.useState({});
   const [filename, setFilename] = React.useState('')
   function handleChange (event,type) {
     //console.log(event.target);
     const name = event.target.name;
     
-    const value = type== "bool" ? event.target.checked : event.target.value;
+    const value = type === "bool" ? event.target.checked : event.target.value;
     console.log(event.target.checked , event.target.value);
     setInputs(values => ({ ...values, [name]: value }))
   }
@@ -28,13 +27,7 @@ export default function Proto() {
     const value = option.value;
     setInputs(values => ({ ...values, [name]: value }))
   }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(inputs)
-
-  }
-
+  
   const saveFile = () => {
     console.log('Button clicked')
 
@@ -59,20 +52,6 @@ export default function Proto() {
 
   }
 
-
-  // const parseProto =() => {
-  //   var proto = "syntax=\"proto3\";\
-  //     message MyMessage {\
-  //     string some_field = 1;\
-  //   }";
-
-  //   var root = parse(proto, { keepCase: true }).root;
-  //   console.log(root)
-  // }
-
-
-
-  //if (!post) return null;
 
   return (
     <div>
@@ -127,7 +106,7 @@ export default function Proto() {
                         <td>({field.type})</td>
                         
                         
-                        <td><input type={(field.type == 'bool') ? "checkbox" : "text"} name={field.name} inp_type={field.type}
+                        <td><input type={(field.type === 'bool') ? "checkbox" : "text"} name={field.name} inp_type={field.type}
                           value={inputs[field.name] || ""}
                           onChange={(e)=> handleChange (e,field.type)}
                         /></td>

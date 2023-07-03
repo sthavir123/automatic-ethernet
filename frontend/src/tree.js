@@ -1,16 +1,19 @@
-import React, { Component, useState } from 'react'
-import sample from './sample.json'
-
+import React, { Component,useCallback, useState } from 'react'
 import Container from './DropdownContainer';
 import './App.css';
-import { Input } from './input';
+import { Input,Collapsible,Pop } from './input';
 import UploadFile from './UploadFile';
 import Proto from './proto';
 import axios from 'axios';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import Popup from 'reactjs-popup';
+import ReactDOM from 'react-dom/client';
+import 'reactjs-popup/dist/index.css'
+import sample from './sample1.json'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 let api = 'http://127.0.0.1:8000/arxml/parse'
-
-const startkeys = ["<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2c45e1cd340>","<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2c45e1cd300>"];
 
 const transformJson = async (obj = {},e1 = null) =>{
   
@@ -61,28 +64,80 @@ const transformJson = async (obj = {},e1 = null) =>{
 
 
 
-export class Tree extends Component {
-  // state variables
-  state = {
-    
-    selected : [],
-    filename : '',
-    transform : {},
-  }
-  //setState function : selected
-  onChange = (currentNode, selectedNodes) => {
-    console.log(selectedNodes)
-    this.setState(
-      { selected:selectedNodes}
+const transformobj2 = async(obj = {}) => {
+  if(obj['children']){
+    obj['children2'] = []
+    obj['children'].map(
+      async (child) => {
+        var k = await transformobj2(child)
+        obj['children2'] = [...obj['children2'],k]
+      }
     )
-    
   }
-  //setState function : filename
-  setFilename = (name) =>{
-    this.setState({filename:name})
+  return obj;
+}
+
+const node = document.createElement("div");
+const popup = (message, {type, timeout}) => {
+  document.body.appendChild(node);
+  const PopupContent = () => {
+    return (
+      
+        <button
+          onClick={clear}
+        >Close</button>
+      
+
+    );
+  };
+
+  const clear = () => {
+    ReactDOM.unmountComponentAtNode(node);
+    node.remove();
+  }
+  
+  ReactDOM.render(<PopupContent/>, node);
+};
+
+
+
+export function Tree() {
+  // state variables
+  const [selected,setSelected] = useState([]);
+  const [selected2,setSelected2] = useState([]);
+  const [filename,setFilename] = useState("");
+  const [transform,setTransform] = useState({});
+  const [submit_values,setSubmit_values] = useState({});
+  
+  //setState function : selected
+  const onChange = (currentNode, selectedNodes) => {
+    //console.log(selectedNodes)
+    setSelected(selectedNodes);
+   
   }
 
-  get_parsed_arxml = async (filename) => {
+  const onChange2 = (currentNode , selectedNodes)=>{
+    setSelected2(selectedNodes);
+  }
+
+  
+  const handleInpChange = (e,parent,inp) => {
+    console.log(e.target.value,parent,inp);
+    setSubmit_values(
+      {...submit_values , [parent]:inp}
+    )
+    console.log(submit_values)
+    
+  };
+
+  
+
+
+ 
+
+  
+
+  const get_parsed_arxml = async (filename) => {
     await axios.get(api , {params:{file:filename}}).then(
       response =>{
           var data = response.data.data
@@ -93,11 +148,9 @@ export class Tree extends Component {
             
             k['children'].push(elem)
           })
-          this.setState({
-            transform: k
-          })
+          setTransform(k);
           
-          //console.log(this.state.transform)
+          console.log(transform)
           //setFiles(response.data)
       }
       ).catch(error =>{
@@ -105,80 +158,96 @@ export class Tree extends Component {
       })
   }
 
-  render() {
-    //const [filename, setFilename] = useState('');
+  const get_parsed_arxml2 = async (filename)=>{
+    
+    var k = {"label":"root",'children':sample}
+    //      Object.keys(sample).map(async (key)=>{
+            
+    //         let elem = await transformJson(sample[key],key)
+    //         console.log(elem.label)  
+    //         k['children']  = [...k['children'],elem]
+            
+    //       })
+    //       console.log(k['children']);
+          
+          var l = await transformobj2(k)
+          setTransform(l);
+        
+  }
+  
+
+
+    
         
     return (
       <div >
 
-        <div className='rowA'>
-          <div className='child'>
-
-            <UploadFile filename={this.state.filename} setFilename = {this.setFilename}/>
-            <button onClick={(e)=>this.get_parsed_arxml(this.state.filename.name)}>Parse</button>
+        <div >
+          <div>
+            {/* <button onClick={ popup("hello world" , {type:"info",timeout:1000})}>click me</button> */}
+            <UploadFile filename={filename} setFilename = {setFilename} parse={get_parsed_arxml}/>
+            <button onClick={(e)=>get_parsed_arxml(filename.name)}>Parse</button>
             {/* <Proto/> */}
-            {this.state.transform && <Container data={this.state.transform} onChange={this.onChange} />}
+            {/*** Tabbed veiw for RX AND TX  */ }
+            <Tabs forceRenderTabPanel>
+              <TabList>
+                <Tab> Rx Tab </Tab>
+                <Tab> Tx Tab </Tab>
+              </TabList>
 
+            <TabPanel>
+              <div className='child1'>
+                <Container data={transform} onChange={onChange} />
+              </div>
+              
+              <div className='child2'>  
+              {
+                selected && selected.map(item=>(
+                  <div className='toogleable'>  
+                  
+                  <Collapsible pdu = {item.label} data={Array.isArray(
+                    item["I-SIGNAL-TO-I-PDU-MAPPING"]) ? item["I-SIGNAL-TO-I-PDU-MAPPING"] : [item["I-SIGNAL-TO-I-PDU-MAPPING"]]}/>
+                  </div>  
+                ))
+              }
+              </div>
+            </TabPanel>
+              
+            <TabPanel>
+              <div className='child1'>
+                <Container data={transform} onChange={onChange2}/>
+              </div>
+
+              <div className='child2'>  
+              {
+                selected2 && selected2.map(item=>(
+                  <div className='toogleable'>  
+                    <Collapsible pdu = {item.label} data={Array.isArray(
+                    item["I-SIGNAL-TO-I-PDU-MAPPING"]) ? item["I-SIGNAL-TO-I-PDU-MAPPING"] : [item["I-SIGNAL-TO-I-PDU-MAPPING"]]}
+                    item={item} submit_values={submit_values} handleInpChange={handleInpChange}
+                    />
+                    
+                    
+
+                  </div>  
+                ))
+              }
+              </div>
+              
+
+            </TabPanel>
+            </Tabs>
           </div>
-          <div className='child'>
-          {
-              this.state.selected && this.state.selected.map(item=>(
-                
-                <Input data={Array.isArray(
-                  item["I-SIGNAL-TO-I-PDU-MAPPING"]) ? item["I-SIGNAL-TO-I-PDU-MAPPING"] : [item["I-SIGNAL-TO-I-PDU-MAPPING"]]}/>
-              ))
-            }
-          </div>
+          
         </div>
       </div>
       
-    )
+    );
   }
-}
 
 
 
 
-// export function Tree(){
-
-//   const [selected,setSelected] = useState([]);
-//   const [data,setData] = useState(transform);
-
-//   // onchange = async (currentNode,selectedNodes) =>{
-//   //   setSelected(selectedNodes);
-//   //   console.log(selectedNodes);
-//   // }
-
-//   onchange = async (currentNode, selectedNodes) => {
-//     let k = await selectedNodes;
-//     setSelected(k);
-//     //this.setState({ test: 'something else' })
-//     console.log(selected);    
-//   }
 
 
-//   return(
-//   <div>
-//     <button
-//         onClick={async (e)=>{
-//           //console.log(JSON.stringify(await transformObject(sample["<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2018c4a4480>"],"<Element {http://autosar.org/schema/r4.0}I-SIGNAL-I-PDU-GROUP at 0x2018c4a4480>")));
-//           console.log(selected);
-//         }}
-      
-//         >get Json</button>
-//        <div>
-//        <Container data={data} onChange={onchange} />
-         
-//       </div>
-//       <div>
-//         {
-//         selected&&  
-//         selected.map(data=>(
-          
-//           <p>{data.label}</p>
-//         ))}
-//       </div>   
-//   </div>
-//   );
-// }
 
