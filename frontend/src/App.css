@@ -41,8 +41,7 @@
 .rowA {
     display: block;
     flex-direction: column;
-    overflow-inline: scroll;
-    overflow-block: scroll;
+    
     
 }
 
@@ -62,8 +61,7 @@
     height: 300px;
     
     white-space: nowrap;
-    overflow-y: scroll;
-    overflow-x: scroll;
+    
     
 
 }
@@ -73,6 +71,59 @@
     height: 600px;
     
     white-space: nowrap;
-    overflow-y: scroll;
-    overflow-x: scroll;
+    
 }
+.table{
+
+    left: 50px;
+
+    
+}
+.table td{
+    font-size: medium;
+    text-align: center;
+}
+.table th{
+    font-size: large;
+    text-align: center;
+}
+.ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+  }
+
+.block {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.first-color { 
+	background: #233142; 
+}
+	
+.second-color { 
+	background: #455d7a; 
+}
+
+.third-color { 
+	background: #f95959; 
+}
+
+.fourth-color { 
+	background: #e3e3e3;
+} 
+
+ul {
+    display: block;
+    list-style-type: none;
+    margin-top: 1em;
+    margin-bottom: 1 em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 10em;
+  }

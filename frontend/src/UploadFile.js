@@ -1,6 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import axios from 'axios'
-
+import './App.css'
 
 function UploadFile({filename,setFilename,parse}) {
 
@@ -38,36 +38,27 @@ function UploadFile({filename,setFilename,parse}) {
 
     
 
-    // const getFiles = () =>{
-
-    //     axios.get(api + '/files/').then(
-    //         response =>{
-    //             //console.log(response.data)
-    //             setFiles(response.data)
-    //         }
-    //     ).catch(error =>{
-    //         console.log(error)
-    //     })
-
-    // }
-
-    // useEffect (() =>{
-    //     getFiles()
-        
-    // }, [])
-
-
 
     return (
-    <div className="col-md-4">
-        <h2 className="alert alert-success">ArXML Tool</h2>
-        <form >
-            <div className="form-group">
-                <label htmlFor="exampleFormControlFile1" className="float-left"></label>
-                <input type="file" onChange={e => setFilename(e.target.files[0])} className="form-control" />
-                <button type="button" onClick={saveFile} className="btn btn-primary float-left mt-2">Submit</button>
-            </div>
-        </form>
+    <div>
+        <div class="alert alert-success" style={{height :"10%"}} >
+        <div class="d-flex justify-content-center">
+        <div class="input-group w-auto">
+            <input
+            type="file"
+            class="form-control"
+            placeholder="Example input"
+            aria-label="Example input"
+            aria-describedby="button-addon1"
+            onChange={e => setFilename(e.target.files[0])}
+            />
+            <button class="btn btn-primary" type="button" id="button-addon1" data-mdb-ripple-color="dark" onClick={saveFile}>
+                Submit
+            </button>
+        </div>
+    </div>    
+
+    </div>
     </div>
     );
 }

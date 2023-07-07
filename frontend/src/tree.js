@@ -1,18 +1,16 @@
-import React, { Component,useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import Container from './DropdownContainer';
 import './App.css';
-import { Input,Collapsible,Pop } from './input';
+import {DisplayContainer,Collapsible1 } from './input';
 import UploadFile from './UploadFile';
-import Proto from './proto';
 import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import Popup from 'reactjs-popup';
 import ReactDOM from 'react-dom/client';
-import 'reactjs-popup/dist/index.css'
-import sample from './sample1.json'
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import sample from './sample.json'
+import 'bootstrap/dist/css/bootstrap.css';
+import {ToggleSidebar} from './sidebar'
+import { ToggleSidebar2 } from './sidebar2';
 let api = 'http://127.0.0.1:8000/arxml/parse'
 
 const transformJson = async (obj = {},e1 = null) =>{
@@ -64,12 +62,21 @@ const transformJson = async (obj = {},e1 = null) =>{
 
 
 
-const transformobj2 = async(obj = {}) => {
+const transformobj2 = async(obj = {},level = 0) => {
+  // Adding level info for identifing the signal (level=4) info
+  obj['level'] = level;
+  if(level > 2){
+    obj.disabled = true;
+  }
+  
+  if(level==3){
+    obj.selected = false;
+  }
   if(obj['children']){
     obj['children2'] = []
     obj['children'].map(
       async (child) => {
-        var k = await transformobj2(child)
+        var k = await transformobj2(child,level+1);
         obj['children2'] = [...obj['children2'],k]
       }
     )
@@ -106,23 +113,38 @@ export function Tree() {
   const [selected,setSelected] = useState([]);
   const [selected2,setSelected2] = useState([]);
   const [filename,setFilename] = useState("");
-  const [transform,setTransform] = useState({});
+  const [rx,setRx] = useState({});
+  const [tx,setTx] = useState({});
   const [submit_values,setSubmit_values] = useState({});
   
+
   //setState function : selected
   const onChange = (currentNode, selectedNodes) => {
-    //console.log(selectedNodes)
+    console.log(selectedNodes)
     setSelected(selectedNodes);
    
   }
 
   const onChange2 = (currentNode , selectedNodes)=>{
-    setSelected2(selectedNodes);
+
+    // console.log(selectedNodes)
+    // selectedNodes.map((item)=>{
+    //   if(item._depth !=2)
+    //     console.log(item)
+    // })
+    setSelected2(selectedNodes)
+    
   }
 
-  
+  const setRxValues = (newval)=>{
+    setSelected(newval);
+  }
+  const setTxValues = (newval)=>{
+    setSelected2(newval);
+  }
+
   const handleInpChange = (e,parent,inp) => {
-    console.log(e.target.value,parent,inp);
+    
     setSubmit_values(
       {...submit_values , [parent]:inp}
     )
@@ -148,9 +170,9 @@ export function Tree() {
             
             k['children'].push(elem)
           })
-          setTransform(k);
+          //setTransform(k);
           
-          console.log(transform)
+          //console.log(transform)
           //setFiles(response.data)
       }
       ).catch(error =>{
@@ -159,45 +181,43 @@ export function Tree() {
   }
 
   const get_parsed_arxml2 = async (filename)=>{
+    var Rx = sample.filter((item)=>{
+      return item.label.startsWith('Rx')
+    })
+    var Tx = sample.filter((item)=>{
+      return item.label.startsWith('Tx')
+    })
+    var r = await transformobj2({"label":"root",'children':Rx},0)
+    var t = await transformobj2({"label":"root",'children':Tx},0)
+    console.log(r)
+    console.log(t)
+    setRx(r);
+    setTx(t);
     
-    var k = {"label":"root",'children':sample}
-    //      Object.keys(sample).map(async (key)=>{
-            
-    //         let elem = await transformJson(sample[key],key)
-    //         console.log(elem.label)  
-    //         k['children']  = [...k['children'],elem]
-            
-    //       })
-    //       console.log(k['children']);
-          
-          var l = await transformobj2(k)
-          setTransform(l);
-        
+    
   }
   
-
-
-    
-        
+     
     return (
       <div >
 
         <div >
           <div>
-            {/* <button onClick={ popup("hello world" , {type:"info",timeout:1000})}>click me</button> */}
-            <UploadFile filename={filename} setFilename = {setFilename} parse={get_parsed_arxml}/>
-            <button onClick={(e)=>get_parsed_arxml(filename.name)}>Parse</button>
-            {/* <Proto/> */}
+            
+            <UploadFile filename={filename} setFilename = {setFilename} parse={get_parsed_arxml2}/>
+            {/* <button onClick={(e)=>get_parsed_arxml2(filename.name)}>Parse</button>
+            <Proto/> */}
             {/*** Tabbed veiw for RX AND TX  */ }
+            
             <Tabs forceRenderTabPanel>
               <TabList>
                 <Tab> Rx Tab </Tab>
                 <Tab> Tx Tab </Tab>
               </TabList>
 
-            <TabPanel>
-              <div className='child1'>
-                <Container data={transform} onChange={onChange} />
+            <TabPanel >
+              {/* <div className='child1'>
+                <Container data={rx} onChange={onChange} />
               </div>
               
               <div className='child2'>  
@@ -205,37 +225,28 @@ export function Tree() {
                 selected && selected.map(item=>(
                   <div className='toogleable'>  
                   
-                  <Collapsible pdu = {item.label} data={Array.isArray(
+                  <Collapsible1 pdu = {item.label} data={Array.isArray(
                     item["I-SIGNAL-TO-I-PDU-MAPPING"]) ? item["I-SIGNAL-TO-I-PDU-MAPPING"] : [item["I-SIGNAL-TO-I-PDU-MAPPING"]]}/>
                   </div>  
                 ))
               }
-              </div>
+              </div> */}
+
+            <ToggleSidebar tx={rx} onChange={onChange}/>
+            <ToggleSidebar2 selected2={selected} setSelectData= {setRxValues}/> 
+            <DisplayContainer selected2={selected} submit_values={submit_values} handleInpChange={handleInpChange} type="rx" setSelected2={setRxValues}/>
+
             </TabPanel>
-              
-            <TabPanel>
-              <div className='child1'>
-                <Container data={transform} onChange={onChange2}/>
-              </div>
-
-              <div className='child2'>  
-              {
-                selected2 && selected2.map(item=>(
-                  <div className='toogleable'>  
-                    <Collapsible pdu = {item.label} data={Array.isArray(
-                    item["I-SIGNAL-TO-I-PDU-MAPPING"]) ? item["I-SIGNAL-TO-I-PDU-MAPPING"] : [item["I-SIGNAL-TO-I-PDU-MAPPING"]]}
-                    item={item} submit_values={submit_values} handleInpChange={handleInpChange}
-                    />
-                    
-                    
-
-                  </div>  
-                ))
-              }
-              </div>
+                     
+            <TabPanel >
+            
+            <ToggleSidebar tx={tx} onChange={onChange2}/>
+            <ToggleSidebar2 selected2={selected2} setSelectData= {setTxValues}/> 
+            <DisplayContainer selected2={selected2} submit_values={submit_values} handleInpChange={handleInpChange} type="tx"  setSelected2={setTxValues}/>
               
 
             </TabPanel>
+           
             </Tabs>
           </div>
           
@@ -244,7 +255,6 @@ export function Tree() {
       
     );
   }
-
 
 
 

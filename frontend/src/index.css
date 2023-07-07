@@ -1,9 +1,3 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
-}
-
 .tag {
   background-color: #f4f4f4;
   border: 1px solid #e9e9e9;
@@ -27,8 +21,7 @@ body {
   outline: none
 }
 
-.tag-remove.disabled,
-.tag-remove.readOnly {
+.tag-remove.disabled, .tag-remove.readOnly {
   cursor: not-allowed
 }
 
@@ -52,14 +45,73 @@ body {
   margin: 4px
 }
 
+
 .tag-item .search {
   border: none;
   border-bottom: 1px solid #ccc;
   outline: none
 }
 
+.tag-item:not(:last-child){
+  display: none;
+}
+
 .tag-item:last-child {
   margin-right: 4px
+}
+
+.node {
+  list-style: none;
+  white-space: nowrap;
+  padding: 4px
+}
+
+.node.leaf.collapsed {
+  display: none
+}
+
+.node.disabled>* {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.node.match-in-children.hide .node-label {
+  opacity: .5
+}
+
+.node.focused {
+  background-color: #f4f4f4
+}
+
+.toggle {
+  white-space: pre;
+  margin-right: 4px;
+  cursor: pointer
+}
+
+.toggle:after {
+  content: "\02C3"
+}
+
+.toggle.collapsed:after {
+  content: "+"
+}
+
+.toggle.expanded:after {
+  content: "-"
+}
+
+.searchModeOn .toggle {
+  display: none
+}
+
+.checkbox-item, .radio-item {
+  vertical-align: middle;
+  margin: 0 4px 0 0
+}
+
+.checkbox-item.simple-select, .radio-item.simple-select {
+  display: none
 }
 
 .hide:not(.match-in-children) {
@@ -67,9 +119,10 @@ body {
 }
 
 .react-dropdown-tree-select .dropdown {
-  position: relative;
-  display: table
-}
+  
+  display: inline-block;
+  height: inherit;
+  }
 
 .react-dropdown-tree-select .dropdown .dropdown-trigger {
   padding: 4px;
@@ -106,73 +159,37 @@ body {
   color: #b9b9b9
 }
 
+
+
 .react-dropdown-tree-select .dropdown .dropdown-content {
-  position: absolute;
+  font-size: small;
+  position: relative;
+  overflow-x: auto;
   padding: 4px;
-  z-index: 1;
-  background: #fff;
+  height: inherit;
+  
+  
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
   border-top: 1px solid rgba(0, 0, 0, .05);
-  -webkit-box-shadow: 0 5px 8px rgba(0, 0, 0, .15);
-  box-shadow: 0 5px 8px rgba(0, 0, 0, .15)
+  
+}
+
+.react-dropdown-tree-select .dropdown .dropdown-content .search {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none
 }
 
 .react-dropdown-tree-select .dropdown .dropdown-content ul {
   margin: 0;
-  padding: 0
+  padding: 0.5vh
 }
 
-.node {
-  list-style: none;
-  white-space: nowrap;
-  padding: 4px
+body {
+  font-family: Verdana, sans-serif;
+  
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.node.leaf.collapsed {
-  display: none
-}
-
-.node.disabled>* {
-  color: gray;
-  cursor: not-allowed
-}
-
-.node.match-in-children.hide .node-label {
-  opacity: .5
-}
-
-.node.focused {
-  background-color: #f4f4f4
-}
-
-.toggle {
-  white-space: pre;
-  margin-right: 4px;
-  cursor: pointer
-}
-
-.toggle:after {
-  content: " "
-}
-
-.toggle.collapsed:after {
-  content: "+"
-}
-
-.toggle.expanded:after {
-  content: "-"
-}
-
-.searchModeOn .toggle {
-  display: none
-}
-
-.checkbox-item,
-.radio-item {
-  vertical-align: middle;
-  margin: 0 4px 0 0
-}
-
-.checkbox-item.simple-select,
-.radio-item.simple-select {
-  display: none;
-}
