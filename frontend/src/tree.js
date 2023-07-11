@@ -1,17 +1,26 @@
-import React, { useState } from 'react'
-import Container from './DropdownContainer';
+import React, { useState,useEffect } from 'react'
+
 import './App.css';
 import {DisplayContainer,Collapsible1 } from './input';
 import UploadFile from './UploadFile';
 import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import ReactDOM from 'react-dom/client';
+
 import sample from './sample.json'
 import 'bootstrap/dist/css/bootstrap.css';
 import {ToggleSidebar} from './sidebar'
 import { ToggleSidebar2 } from './sidebar2';
+import FileSaver from 'file-saver'
+// import configjson from './sample1.json'
 let api = 'http://127.0.0.1:8000/arxml/parse'
+
+function useForceUpdate(){
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue(value => value + 1); // update state to force render
+  // A function that increment 👆🏻 the previous state like here 
+  // is better than directly setting `setValue(value + 1)`
+}
 
 const transformJson = async (obj = {},e1 = null) =>{
   
@@ -65,6 +74,7 @@ const transformJson = async (obj = {},e1 = null) =>{
 const transformobj2 = async(obj = {},level = 0) => {
   // Adding level info for identifing the signal (level=4) info
   obj['level'] = level;
+  
   if(level > 2){
     obj.disabled = true;
   }
@@ -84,28 +94,6 @@ const transformobj2 = async(obj = {},level = 0) => {
   return obj;
 }
 
-const node = document.createElement("div");
-const popup = (message, {type, timeout}) => {
-  document.body.appendChild(node);
-  const PopupContent = () => {
-    return (
-      
-        <button
-          onClick={clear}
-        >Close</button>
-      
-
-    );
-  };
-
-  const clear = () => {
-    ReactDOM.unmountComponentAtNode(node);
-    node.remove();
-  }
-  
-  ReactDOM.render(<PopupContent/>, node);
-};
-
 
 
 export function Tree() {
@@ -116,25 +104,22 @@ export function Tree() {
   const [rx,setRx] = useState({});
   const [tx,setTx] = useState({});
   const [submit_values,setSubmit_values] = useState({});
-  
-
+  const [configFile,setConfigFile] = useState(null);
+  const force = useForceUpdate()
+  const [forceset,setForceSet] = useState(false)
+  useEffect(() => {
+    console.count("Component Rendered ");
+  }, []);
   //setState function : selected
   const onChange = (currentNode, selectedNodes) => {
-    console.log(selectedNodes)
+    
     setSelected(selectedNodes);
    
   }
 
   const onChange2 = (currentNode , selectedNodes)=>{
-
-    // console.log(selectedNodes)
-    // selectedNodes.map((item)=>{
-    //   if(item._depth !=2)
-    //     console.log(item)
-    // })
     setSelected2(selectedNodes)
-    
-  }
+    }
 
   const setRxValues = (newval)=>{
     setSelected(newval);
@@ -152,7 +137,12 @@ export function Tree() {
     
   };
 
-  
+  const setRX = async (newrx)=>{
+    setRx(newrx)
+  }
+  const setTX = async (newtx)=>{
+    setTx(newtx)
+  }
 
 
  
@@ -170,10 +160,7 @@ export function Tree() {
             
             k['children'].push(elem)
           })
-          //setTransform(k);
-          
-          //console.log(transform)
-          //setFiles(response.data)
+         
       }
       ).catch(error =>{
       console.log(error)
@@ -197,7 +184,75 @@ export function Tree() {
     
   }
   
-     
+  const saveConfig = (data) =>{
+    const json=JSON.stringify(data);
+    const blob=new Blob([json],{type:'application/json'})
+    FileSaver.saveAs(blob, "config.json");
+  }
+  
+  const loadConfig = async (e) =>{
+    var reader = new FileReader();
+    var k;
+    var z = {...rx};
+    setRx({})
+    reader.onload  =  async function (){
+      k = JSON.parse(reader.result)
+      
+      
+      k.map((item,index)=>{
+        var indices = item['_id'].split('-').splice(2)
+        
+        
+          /** Harcoded for Pdu Level */
+        z['children'][parseInt(indices[0])]['children'][parseInt(indices[1])]['children'] = item['children2']
+        z['children'][parseInt(indices[0])]['children'][parseInt(indices[1])]['checked'] = true
+        z['children2'][parseInt(indices[0])]['children2'][parseInt(indices[1])]['children2'] = item['children2']
+        
+        
+        
+      })
+      
+      console.log(z)
+      
+      await setRX(z)
+      setSelected(k)
+      
+    }
+    reader.readAsText(configFile);
+    
+    
+    
+    
+  }
+
+  const loadConfig2 = async (e) =>{
+    var reader = new FileReader();
+    var k;
+    var z = {...tx}
+    setTx({})
+    reader.onload  = async function(){
+      var k = JSON.parse(reader.result)
+      
+      
+      
+      k.map((item,index)=>{
+        var indices = item['_id'].split('-').splice(2)
+        
+        
+          /** Harcoded for Pdu Level */
+        z['children'][parseInt(indices[0])]['children'][parseInt(indices[1])]['children'] = item['children2']
+        z['children'][parseInt(indices[0])]['children'][parseInt(indices[1])]['checked'] = true
+        z['children2'][parseInt(indices[0])]['children2'][parseInt(indices[1])]['children2'] = item['children2']
+        
+        
+        
+      })
+      await setTX(z)
+      setSelected2(k)
+    }
+    reader.readAsText(configFile);
+  }
+
     return (
       <div >
 
@@ -205,7 +260,7 @@ export function Tree() {
           <div>
             
             <UploadFile filename={filename} setFilename = {setFilename} parse={get_parsed_arxml2}/>
-            {/* <button onClick={(e)=>get_parsed_arxml2(filename.name)}>Parse</button>
+            {/* 
             <Proto/> */}
             {/*** Tabbed veiw for RX AND TX  */ }
             
@@ -216,23 +271,27 @@ export function Tree() {
               </TabList>
 
             <TabPanel >
-              {/* <div className='child1'>
-                <Container data={rx} onChange={onChange} />
-              </div>
-              
-              <div className='child2'>  
-              {
-                selected && selected.map(item=>(
-                  <div className='toogleable'>  
-                  
-                  <Collapsible1 pdu = {item.label} data={Array.isArray(
-                    item["I-SIGNAL-TO-I-PDU-MAPPING"]) ? item["I-SIGNAL-TO-I-PDU-MAPPING"] : [item["I-SIGNAL-TO-I-PDU-MAPPING"]]}/>
-                  </div>  
-                ))
-              }
-              </div> */}
+             <h1></h1>
 
-            <ToggleSidebar tx={rx} onChange={onChange}/>
+            <div class="input-group w-auto" style={{position:"fixed", right:"20em",top:"8.9em"}}>
+              <input
+                type="file"
+                class="form-control"
+                placeholder="Load Json"
+                aria-label="Load Json"
+                aria-describedby="button-addon2"
+                onChange={(e)=> {setConfigFile(e.target.files[0])}}
+              />
+              <button class="btn btn-primary" type="button" id="button-addon2" data-mdb-ripple-color="dark" onClick={(e)=>{ loadConfig(e) ; console.log("Done")}} >
+                Load Config
+              </button>
+            </div>
+            <button class="btn btn-primary" type="button" data-mdb-ripple-color="dark" onClick={(e)=>saveConfig(selected)}  style={{position:"fixed", right:"49em",top:"8.9em"}} >
+                Save Config
+            </button>
+              
+
+            <ToggleSidebar tx={rx} onChange={onChange} forceset= {forceset} setForceSet={setForceSet}/>
             <ToggleSidebar2 selected2={selected} setSelectData= {setRxValues}/> 
             <DisplayContainer selected2={selected} submit_values={submit_values} handleInpChange={handleInpChange} type="rx" setSelected2={setRxValues}/>
 
@@ -240,6 +299,23 @@ export function Tree() {
                      
             <TabPanel >
             
+            <div class="input-group w-auto" style={{position:"fixed", right:"20em",top:"8.9em"}}>
+              <input
+                type="file"
+                class="form-control"
+                placeholder="Load Json"
+                aria-label="Load Json"
+                aria-describedby="button-addon3"
+                onChange={(e)=> {setConfigFile(e.target.files[0])}}
+              />
+              <button class="btn btn-primary" type="button" id="button-addon3" data-mdb-ripple-color="dark" onClick={loadConfig2} >
+                Load Config
+              </button>
+            </div>
+            <button class="btn btn-primary" type="button" data-mdb-ripple-color="dark" onClick={(e)=>saveConfig(selected2)}  style={{position:"fixed", right:"49em",top:"8.9em"}} >
+                Save Config
+            </button>
+
             <ToggleSidebar tx={tx} onChange={onChange2}/>
             <ToggleSidebar2 selected2={selected2} setSelectData= {setTxValues}/> 
             <DisplayContainer selected2={selected2} submit_values={submit_values} handleInpChange={handleInpChange} type="tx"  setSelected2={setTxValues}/>

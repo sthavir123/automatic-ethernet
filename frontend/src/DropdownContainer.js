@@ -6,17 +6,22 @@ export default class Container extends Component {
   constructor(props){
     super(props)
     this.state = { data: props.data }
+    this.forceset = props.forceset
+    this.setForceSet = props.setForceSet
   }
 
   componentWillReceiveProps = (nextProps) => {
+   
     if(!isEqual(nextProps.data, this.state.data)) {
       this.setState({ data: nextProps.data })
     }
   }
 
   shouldComponentUpdate = (nextProps) => {
+   var k = !isEqual(nextProps.data, this.state.data) 
    
-    return !isEqual(nextProps.data, this.state.data)
+   
+    return k; 
   }
 
   render() {

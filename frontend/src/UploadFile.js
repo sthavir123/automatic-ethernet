@@ -44,6 +44,7 @@ function UploadFile({filename,setFilename,parse}) {
         <div class="alert alert-success" style={{height :"10%"}} >
         <div class="d-flex justify-content-center">
         <div class="input-group w-auto">
+            
             <input
             type="file"
             class="form-control"
@@ -52,9 +53,26 @@ function UploadFile({filename,setFilename,parse}) {
             aria-describedby="button-addon1"
             onChange={e => setFilename(e.target.files[0])}
             />
-            <button class="btn btn-primary" type="button" id="button-addon1" data-mdb-ripple-color="dark" onClick={saveFile}>
+            <button class="btn btn-primary" type="button" id="button-addon1" data-mdb-ripple-color="dark" onClick={saveFile} style={{marginRight:"20em"}}>
                 Submit
             </button>
+            
+            
+            <input
+                type="text"
+                class="form-control"
+                placeholder="Select ECU"
+                aria-label="Select ECU"
+                aria-describedby="button-addon2"
+                onChange={e => setFilename(e.target.files[0])}
+            />
+             <button class="btn btn-primary" type="button" id="button-addon2" data-mdb-ripple-color="dark" onClick={saveFile} >
+                Submit
+            </button>
+           
+            
+
+
         </div>
     </div>    
 

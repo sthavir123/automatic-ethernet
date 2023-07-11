@@ -5,6 +5,7 @@ import 'reactjs-popup/dist/index.css'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './App.css'
+
 // import {IoIosArrowUp,IoIosArrowDown  } from 'react-icons/io';
 
 function useForceUpdate(){
@@ -46,7 +47,7 @@ export function Input(props){
         var t = [...props.selected2]
         var index2 = t[props.index]['children2'].indexOf(item);
         t[props.index]['children2'][index2].selected = false;
-        console.log(props.selected2[props.index]['children2'][index2].selected)
+        
         props.setSelected2(t)
     }
         return(
@@ -98,7 +99,7 @@ export function Input(props){
                                    
                             } catch (error) {
                                 if(scale) {
-                                    console.log(error)
+                                    // console.log(error)
                                 }
                             }
 
@@ -168,7 +169,7 @@ export function Collapsible1(props) {
     const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
     
     const [data,setData] = useState([])
-    useEffect(()=>{console.log("set");setData(props.data)},[props.data])
+    useEffect(()=>{setData(props.data)},[props.data])
 return (
     <div className="collapsible" style={{border:"1px solid black" ,marginBottom: "10px"}}>
         <div className="header" style ={{ display:"flex", justifyContent:'space-between',color:"purple"}} {...getToggleProps()}>
@@ -178,6 +179,7 @@ return (
         </div>
         <div {...getCollapseProps()}>
             <div className="content" style={{backgroundColor:"white"}}>
+                {/** props.data in save config */}
                 < Input data = {data} 
                     parent = {props.item.label} 
                     values = {props.submit_values}
@@ -192,52 +194,58 @@ return (
     );
 }
 
-export function temp2(props){
-    console.log(props.data)
+export function Temp2(props){
+    const [data,setData] = useState([])
+    const [selectData,setSelect] = useState([])
+    const force = useForceUpdate()
+    useEffect(()=>{setData(props.data)},[props.data])
+    useEffect(()=>{setSelect(props.selectData)},[props.selectData])
+    
     return(
+        <div>
         <ul style={{listStyleType:'none'}}>   
-             {props.data.map((item,index)=>(
-                <li style={{fontSize:"small"}}>
+             {data.map((item,index)=>(
+                <li style={{fontSize:"small"}} key={index}>
                     
-                    <input type='checkbox' defaultChecked={ (props.selectData[props.index]) ? props.selectData[props.index].children2[index].selected : false} name={item.label} onChange={(e)=>props.onChange(e,index)} style={{marginRight:"1em"}}/>
-                    <label for={item.label} >{item.label}</label>
+                    <input type='checkbox' checked={ (selectData[props.index]) ? selectData[props.index]['children2'][index].selected : false} name={item.label} onClick={(e)=>{props.onChange(e,index,selectData[props.index]['children2'][index].selected); force()}} style={{marginRight:"1em"}} 
+                    
+                    />
+                    <label for={item.label} >{item['children2'][0].label}</label>
+                    
                 </li>
              ))}
                </ul>
+               </div>
     )
 }
 
+
+
 export function Collapsible2(props){
-    console.log(props)
+    
     const forceUpdate = useForceUpdate();
     const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
-    const onChange = (e,index1) =>{
+    const onChange = (e,index1,temp) =>{
         var k = props.select;
-        k[props.index].children2[index1].selected = e.target.checked;
+        k[props.index].children2[index1].selected = !k[props.index].children2[index1].selected;
         props.setSelect(k)    
-        console.log(e.target.checked)
+       
     }
     const [selectData,setSelectData] = useState([])
     const [data,setData] = useState([])
-    useEffect(()=>{console.log("setthis");setSelectData(props.select)},[props.select])
-    useEffect(()=>{console.log("setthis");setData(props.data)},[props.data])
-    console.log(props)
+    
+    useEffect(()=>{setSelectData(props.select)},[props.select])
+    useEffect(()=>{setData(props.data)},[props.data])
+    
     return(
     <div className="collapsible">
         <div   {...getToggleProps()}>
-            <h6 onClick={forceUpdate}>{props.pdu}</h6>
+            <h6>{props.pdu}</h6>
         </div>
         <div {...getCollapseProps()}>
             <div className="content">
-            <ul style={{listStyleType:'none'}}>   
-             {data.map((item,index)=>(
-                <li style={{fontSize:"small"}}>
-                    
-                    <input type='checkbox' defaultChecked={ (selectData[props.index]) ? selectData[props.index].children2[index].selected : false} name={item.label} onChange={(e)=>onChange(e,index)} style={{marginRight:"1em"}}/>
-                    <label for={item.label} >{item.label}</label>
-                </li>
-                ))}
-               </ul>
+            
+             <Temp2 data = {data} index={props.index} onChange={onChange} selectData={selectData} setSelected2={props.setSelect} searchPredicate = {props.searchPredicate}/>  
             </div>
         </div>
         

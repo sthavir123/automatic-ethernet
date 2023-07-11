@@ -8,13 +8,13 @@ export function ToggleSidebar (props) {
     const ToggleSidebar = () => {
         isOpen === true ? setIsopen(false) : setIsopen(true);
     }
-    useEffect(()=>{setData(props.tx)},[props.tx])
+    useEffect(()=>{setData(props.tx);console.log("this")},[props.tx])
     return (
         <>
             <div className="container-fluid mt-3" >
                 
                     
-                    <div className="btn btn-primary" onClick={ToggleSidebar} style={{position:"fixed",right:"50px"}}>
+                    <div className="btn btn-primary" onClick={ToggleSidebar} style={{position:"fixed",right:"3.5em",top:"8.9em"}}>
                             Select Pdu       
                     </div>
                     <div className={`sidebar ${isOpen == true ? 'active' : ''}`}>
@@ -25,7 +25,7 @@ export function ToggleSidebar (props) {
                             </button>
                         </div>
                         <div className="sd-body">
-                            <Container data={data} onChange={props.onChange}/>
+                            <Container forceset={props.forceset} setForceSet={props.setForceSet} data={data} onChange={props.onChange}/>
                         </div>
                     </div>
                     <div className={`sidebar-overlay ${isOpen == true ? 'active' : ''}`} onClick={ToggleSidebar}></div>
