@@ -5,10 +5,10 @@ import { Collapsible2 } from './input';
 function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
     return () => setValue(value => value + 1); // update state to force render
-    // A function that increment 👆🏻 the previous state like here 
-    // is better than directly setting `setValue(value + 1)`
+    
 }
 
+//sidebar for Select Signals 
 export function ToggleSidebar2 (props) {
     const [isOpen, setIsopen] = useState(false);
     const [searchInput,setSearchInput] = useState('')
@@ -47,7 +47,7 @@ export function ToggleSidebar2 (props) {
                         {
                             props.selected2 && props.selected2.map((item,index)=>(
                             <Collapsible2 pdu={item.label} data={item['children2'].filter((item1)=>{
-                                // console.log(item1.label ,searchInput, item1.label.includes(searchInput))
+                                
                                 return item1['children2'][0].label.toLowerCase().includes(searchInput.toLowerCase());
                             })}
                             setSelect = {props.setSelectData} index={index} select = {props.selected2}

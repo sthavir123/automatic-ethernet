@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import './sidebar.css'
 import Container from './DropdownContainer';
+
+// select PDU sidebar 
 export function ToggleSidebar (props) {
     const [isOpen, setIsopen] = useState(false);
     const [data,setData] = useState({})
-
+    //call this function to toggle Sidebar
     const ToggleSidebar = () => {
         isOpen === true ? setIsopen(false) : setIsopen(true);
     }
-    useEffect(()=>{setData(props.tx);console.log("this")},[props.tx])
+    useEffect(()=>{setData(props.data);console.log("this")},[props.data])
     return (
         <>
             <div className="container-fluid mt-3" >

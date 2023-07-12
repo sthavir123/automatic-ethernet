@@ -1,5 +1,4 @@
-import React, { useState,useEffect } from 'react'
-
+import React, { useState} from 'react'
 import './App.css';
 import {DisplayContainer} from './input';
 import UploadFile from './UploadFile';
@@ -233,7 +232,7 @@ export function Tree() {
             </button>
               
 
-            <ToggleSidebar tx={rx} onChange={onChange}/>
+            <ToggleSidebar data={rx} onChange={onChange}/>
             <ToggleSidebar2 selected2={selected} setSelectData= {setRxValues}/> 
             <DisplayContainer selected2={selected} submit_values={submit_values} handleInpChange={handleInpChange} type="rx" setSelected2={setRxValues}/>
 
@@ -258,7 +257,7 @@ export function Tree() {
                 Save Config
             </button>
 
-            <ToggleSidebar tx={tx} onChange={onChange2}/>
+            <ToggleSidebar data={tx} onChange={onChange2}/>
             <ToggleSidebar2 selected2={selected2} setSelectData= {setTxValues}/> 
             <DisplayContainer selected2={selected2} submit_values={submit_values} handleInpChange={handleInpChange} type="tx"  setSelected2={setTxValues}/>
               

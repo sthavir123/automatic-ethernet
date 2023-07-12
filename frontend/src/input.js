@@ -1,33 +1,33 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import {useCollapse} from 'react-collapsed';
-//import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css'
+
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './App.css'
 
-// import {IoIosArrowUp,IoIosArrowDown  } from 'react-icons/io';
+//import Popup from 'reactjs-popup';  // for popup component
+//import 'reactjs-popup/dist/index.css' 
 
 function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
     return () => setValue(value => value + 1); // update state to force render
-    // A function that increment 👆🏻 the previous state like here 
-    // is better than directly setting `setValue(value + 1)`
 }
+
+
+// component that displays signals inside a particular pdu in tabular form
 
 export function Input(props){
  
-        const [data1,setData1] = useState([])
-        const parent = props.parent;
-        const values1 = props.values;
-        const handleInpChange = props.handleInpChange
-        const [values,setValues] = useState(props.values)
-        const type = props.type
+        const [data1,setData1] = useState([])             // Pdu information
+        const parent = props.parent;                      // pdu label
+        const handleInpChange = props.handleInpChange     // handle change in input values ttriggered in submit Pdu
+        const [values,setValues] = useState(props.values) // input values to sent on pdu Submit
+        const type = props.type                           // "rx" or "tx" (input or display)
+        //update data1 when props.data is changed (triggers when selected either rx or tx is changed)
         useEffect(()=>{setData1(props.data)},[props.data])        
-
+    
+    // handle local value change
     const onValChange = async (target) => {
-        
-        
         setValues(
             {
                 ...values,
@@ -36,14 +36,9 @@ export function Input(props){
         );
         
       }
-
+    
+    // set selected=false to remove sigal from display on '-' click
     const remove = async (item) => {
-
-        var k = [...data1]
-        var index = k.indexOf(item)
-        //k[index].selected = false;
-        
-        
         var t = [...props.selected2]
         var index2 = t[props.index]['children2'].indexOf(item);
         t[props.index]['children2'][index2].selected = false;
@@ -53,109 +48,92 @@ export function Input(props){
         return(
             <div >
                 <div>
-            {/* <button onClick={(e)=>{console.log(this.state.data)}}>get_data</button> */}
-            <form onSubmit={(e)=>{e.preventDefault();handleInpChange(e,parent,values);
-                //props.close()
-                }} >
-            <table className='table-bordered table-sm' style={{}}> 
-                <colgroup>
-                <col span="1" style={{width: "10%"}}/>
-                
-                <col span="1" style={{width: "2%"}}/>
-                <col span="1" style={{width: "30%"}}/>
-                
-                <col span="1" style={{width: "10%"}}/>
-                <col span="1" style={{width: "48%"}}/>
-                </colgroup>
-                <tbody>
-                <tr>
-                    <th><center>SIGNAL-NAME</center></th>
-                    <th><center>{type=="tx" ? "INPUT" : "OUTPUT"}</center></th>
-                    <th><center></center></th>
-                    <th><center>UNIT</center></th>
-                    <th><center>DESCRIPTION</center></th>
+            
+                    <form onSubmit={(e)=>{
+                        e.preventDefault();
+                        handleInpChange(e,parent,values);
+                    }}>
 
-                </tr>
+                    <table className='table-bordered table-sm' style={{}}> 
+                        <colgroup>
+                            <col span="1" style={{width: "10%"}}/>
+                            <col span="1" style={{width: "2%"}}/>
+                            <col span="1" style={{width: "30%"}}/>
+                            <col span="1" style={{width: "10%"}}/>
+                            <col span="1" style={{width: "48%"}}/>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th><center>SIGNAL-NAME</center></th>
+                                <th><center>{type=="tx" ? "INPUT" : "OUTPUT"}</center></th>
+                                <th><center></center></th>
+                                <th><center>UNIT</center></th>
+                                <th><center>DESCRIPTION</center></th>
+
+                            </tr>
                 
                 
-                {
-                        
-                   data1 && data1.filter((item)=>{
-                    
-                    return item.selected;
-                   }).map(item=>
-                    {
-                        try {
-                            const signal = item["children2"][0];
-                            
-                            const unit = item["COMPU-METHOD"]["UNIT"] ?item["COMPU-METHOD"]["UNIT"] : "";
-                            var scale = item["COMPU-METHOD"]["COMPU-SCALE"]  ?? undefined;
-                            var val;
-                            var min,max;
-                            try {
-                                
-                                min = scale[0]["LOWER-LIMIT"]
-                                max = scale[scale.length-1]["UPPER-LIMIT"]
-                                   
-                            } catch (error) {
-                                if(scale) {
-                                    // console.log(error)
-                                }
-                            }
-
-                            
-                            
-                            try{
-                                
-                                val = values[signal.label];
-                                
-                            }catch(error){
-                                
-                            }
-
-                            return(
-                                <tr>
-                                    <td>
-                                        <button className='btn-xs' onClick={(e)=>{remove(item)}}>-</button>
-                                        <label style={{marginLeft:"0.5em"}} for={signal.label}>{signal.label}</label>
+                            {
+                                data1 && data1.filter((item)=>{
+                                    // filter-out signals that are not selected
+                                    return item.selected;
+                                }).map(item=>{
+                                try {
+                                    const signal = item["children2"][0];
+                                    const unit = item["COMPU-METHOD"]["UNIT"] ?item["COMPU-METHOD"]["UNIT"] : "";
+                                    var scale = item["COMPU-METHOD"]["COMPU-SCALE"]  ?? undefined; // undefined for non-enum signals
+                                    var val;
+                                    var min,max;
+                                    try {
+                                        // set max and min so that illegel values for feilds (specially enums) are not submitted 
+                                        min = scale[0]["LOWER-LIMIT"]               
+                                        max = scale[scale.length-1]["UPPER-LIMIT"]  
+                                    } catch (error) {}
+                       
+                                    try{
+                                        // try to get initial value for this signal, so that value persist even after collapsing its collapsible parent
+                                        val = values[signal.label];
+                                    }catch(error){}
+                                    
+                                    return(
+                                    <tr>
+                                        <td>
+                                            <button className='btn-xs' onClick={(e)=>{remove(item)}}>-</button>
+                                            <label style={{marginLeft:"0.5em"}} for={signal.label}>{signal.label}</label>
                                         
-                                    </td>
-                                    <td>
-                                        <input name = {signal.label} type="number" min={min} max={max} value={val} onChange={(e)=>onValChange(e.target)} style={{width:'100%'}} readOnly={type=="rx"}/> 
-                                        
-                                    </td>
-                                    <td>{scale && type=="tx"&&
-                                    <Dropdown
-                                        
-                                        value={val}
-                                        options={
-                                            scale.map((item) => {
-                                                return ({label:item["VT"],value:item["LOWER-LIMIT"]})
-                                        })}
-                                        onChange={(op)=>{onValChange({name:signal.label,value:op.value})}}
-                                    />}
-                                    </td>
-                                    <td><center>{unit}</center></td>
-                                    <td><center>{signal.desc}</center></td>
-                                </tr>
-                            )
+                                        </td>
+                                        <td>
+                                            <input name = {signal.label} type="number" min={min} max={max} value={val} onChange={(e)=>onValChange(e.target)} style={{width:'100%'}} readOnly={type=="rx"}/> 
+                                        </td>
+                                        <td>{
+                                            // provide dropdown for enum
+                                            scale && type=="tx"&&
+                                                <Dropdown
+                                                    value={val}
+                                                options={
+                                                    scale.map((item) => {
+                                                        return ({label:item["VT"],value:item["LOWER-LIMIT"]})   
+                                                    })}
+                                                    onChange={(op)=>{onValChange({name:signal.label,value:op.value})}}
+                                                />
+                                            }
+                                        </td>
+                                        <td><center>{unit}</center></td>
+                                        <td><center>{signal.desc}</center></td>
+                                    </tr>
+                                )
                           //ignoring errors in backend pasrse function  
-                        } catch (error) {
-                           // console.log(error)
-                            
-                        }
+                            } catch (error) {}
+                           
                         return(<></>)
                         //console.log()
                         
                     }
                     )
                 }
-                
-                
-            
-            </tbody>
+                </tbody>
             </table>
-            {type=="tx" && <input type="submit"/>}
+            {type=="tx" && <input type="submit"/> /** submit option only in tx tab*/}
             </form>
             </div>
               
@@ -165,6 +143,7 @@ export function Input(props){
     
 }
 
+// Pdu Info Collapsible
 export function Collapsible1(props) {
     const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
     
@@ -194,9 +173,10 @@ return (
     );
 }
 
+// Display signals in select signal sidebar
 export function Temp2(props){
-    const [data,setData] = useState([])
-    const [selectData,setSelect] = useState([])
+    const [data,setData] = useState([])     // the signals in a particular pdu
+    const [selectData,setSelect] = useState([])  // the total selectedsignals data for modifying it as that is the variable displaye in (pdu-data collapsible)
     const force = useForceUpdate()
     useEffect(()=>{setData(props.data)},[props.data])
     useEffect(()=>{setSelect(props.selectData)},[props.selectData])
@@ -220,11 +200,12 @@ export function Temp2(props){
 }
 
 
-
+// Collapsible Pdu-signal for select signal side bar
 export function Collapsible2(props){
     
-    const forceUpdate = useForceUpdate();
+    
     const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
+    
     const onChange = (e,index1,temp) =>{
         var k = props.select;
         k[props.index].children2[index1].selected = !k[props.index].children2[index1].selected;
@@ -253,6 +234,7 @@ export function Collapsible2(props){
     );
 }
 
+// conatiner for Pdu-data display
 export function DisplayContainer(props){
     
     return(
