@@ -25,7 +25,7 @@ export function ToggleSidebar (props) {
                             </button>
                         </div>
                         <div className="sd-body">
-                            <Container forceset={props.forceset} setForceSet={props.setForceSet} data={data} onChange={props.onChange}/>
+                            <Container  data={data} onChange={props.onChange}/>
                         </div>
                     </div>
                     <div className={`sidebar-overlay ${isOpen == true ? 'active' : ''}`} onClick={ToggleSidebar}></div>

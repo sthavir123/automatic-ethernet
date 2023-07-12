@@ -1,92 +1,45 @@
 import React, { useState,useEffect } from 'react'
 
 import './App.css';
-import {DisplayContainer,Collapsible1 } from './input';
+import {DisplayContainer} from './input';
 import UploadFile from './UploadFile';
 import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-
-import sample from './sample.json'
 import 'bootstrap/dist/css/bootstrap.css';
 import {ToggleSidebar} from './sidebar'
 import { ToggleSidebar2 } from './sidebar2';
-import FileSaver from 'file-saver'
-// import configjson from './sample1.json'
-let api = 'http://127.0.0.1:8000/arxml/parse'
+import FileSaver from 'file-saver';
+import sample from './sample.json';   // temproray load data from this json until backend integrated properly 
+let api = 'http://127.0.0.1:8000/arxml/ecu'
+let api2 = "http://127.0.0.1:8000/arxml/parse"
+
+
+// function to perform forceUpdate of any component if rerender is required to be done
+// mostly used in the code to quick fix for re-render issues/bugs
 
 function useForceUpdate(){
   const [value, setValue] = useState(0); // integer state
   return () => setValue(value => value + 1); // update state to force render
-  // A function that increment 👆🏻 the previous state like here 
-  // is better than directly setting `setValue(value + 1)`
 }
 
-const transformJson = async (obj = {},e1 = null) =>{
-  
-  if(obj && typeof obj == 'object'){
-    
-    if(e1.includes("Element")){
-    
-      obj["children"] = await transformJson(obj["I-SIGNAL-I-PDUS"],"I-SIGNAL-I-PDUS");
-    }
-    else if(e1 === "I-SIGNAL-I-PDUS"){
-      
-    if(!Array.isArray(obj)){
-      obj = [obj];
-    }
-     obj.map(async (child)=>{
-       
-        let k = await transformJson(child["I-SIGNAL-TO-I-PDU-MAPPING"],"I-SIGNAL-TO-I-PDU-MAPPING");
-        child['children'] = (Array.isArray(k)) ? k : [k];
-      });
-    
-    
-  }
-    else if(e1 === "I-SIGNAL-TO-I-PDU-MAPPING"){
-      if(!Array.isArray(obj)){
-        obj = [obj];
-      }
-      await obj.map(async (child)=>{
-        
-        if(child["I-SIGNAL-REF"]){
-          let k = await transformJson(child["I-SIGNAL-REF"],"I-SIGNAL-REF");
-          child['children'] = (Array.isArray(k)) ? k : [k];
-        }
-        
-      });
-    }
-    else if(e1 === "I-SIGNAL-GROUP-REF"){
-     let k = await obj["I-SIGNAL-REFS"]['I-SIGNAL-REF'];
-
-     obj['children'] =  (Array.isArray(k))?  k : [k]; 
-      
-    }
-    
-    return obj;
-
-    
-  }
-}
-
-
-
-const transformobj2 = async(obj = {},level = 0) => {
-  // Adding level info for identifing the signal (level=4) info
+// Adding some feilds to arxml parsed Object used in frontend 
+// Can be done in backend also
+const transformobj = async(obj = {},level = 0) => {
+  // Adding level info
+  // level 0 - root , 1 - TX/RX CCCM , 2 - PDU , 3 - SIGNAL-MAPPING 4 - SYSTEM-SIGNAL WITH DESC
   obj['level'] = level;
-  
   if(level > 2){
-    obj.disabled = true;
+    obj.disabled = true; //only select PDU here
   }
-  
   if(level==3){
-    obj.selected = false;
+    obj.selected = false; //selected feild represnts if the signal is selected or not
   }
   if(obj['children']){
-    obj['children2'] = []
+    obj['children2'] = []  // children2 feild to store children info inside the 'react-dropdown-tree-select' library as the data is changed
     obj['children'].map(
       async (child) => {
-        var k = await transformobj2(child,level+1);
+        var k = await transformobj(child,level+1);
         obj['children2'] = [...obj['children2'],k]
       }
     )
@@ -98,36 +51,39 @@ const transformobj2 = async(obj = {},level = 0) => {
 
 export function Tree() {
   // state variables
-  const [selected,setSelected] = useState([]);
-  const [selected2,setSelected2] = useState([]);
-  const [filename,setFilename] = useState("");
-  const [rx,setRx] = useState({});
-  const [tx,setTx] = useState({});
-  const [submit_values,setSubmit_values] = useState({});
-  const [configFile,setConfigFile] = useState(null);
-  const force = useForceUpdate()
-  const [forceset,setForceSet] = useState(false)
-  useEffect(() => {
-    console.count("Component Rendered ");
-  }, []);
-  //setState function : selected
+  const [selected,setSelected] = useState([]);            //  selected pdu's for Rx 
+  const [selected2,setSelected2] = useState([]);          //  selected pdu's for Tx
+  const [filename,setFilename] = useState("");            //  filename of uploaded file
+  const [rx,setRx] = useState({});                        //  rx data object to be passd to the DropdownTreeSelect
+  const [tx,setTx] = useState({});                        //  tx data object to be passd to the DropdownTreeSelect
+  const [submit_values,setSubmit_values] = useState({});  //  hold values to be submitted to the backend from Tx tab 
+  const [configFile,setConfigFile] = useState(null);      //  config file to load data from
+  const [ecuOptions,setEcuOptions] = useState([]);        //  Ecu Options for the Ecu-list-dropdown
+  
+  // onChange and onChange2 override DropDownTreeSelect 's onChange to get the seelcted nodes 
   const onChange = (currentNode, selectedNodes) => {
-    
-    setSelected(selectedNodes);
-   
+      setSelected(selectedNodes);
   }
-
   const onChange2 = (currentNode , selectedNodes)=>{
     setSelected2(selectedNodes)
-    }
+  }
 
+
+  // Calling setState in functions like this ensure element re-render   
   const setRxValues = (newval)=>{
     setSelected(newval);
   }
   const setTxValues = (newval)=>{
     setSelected2(newval);
   }
+  const setRX = async (newrx)=>{
+    setRx(newrx)
+  }
+  const setTX = async (newtx)=>{
+    setTx(newtx)
+  }
 
+  // handler for Input Changes for Tx inputs
   const handleInpChange = (e,parent,inp) => {
     
     setSubmit_values(
@@ -137,59 +93,53 @@ export function Tree() {
     
   };
 
-  const setRX = async (newrx)=>{
-    setRx(newrx)
-  }
-  const setTX = async (newtx)=>{
-    setTx(newtx)
-  }
-
-
- 
-
-  
-
-  const get_parsed_arxml = async (filename) => {
-    await axios.get(api , {params:{file:filename}}).then(
+  // api call to fetch ecu_options for arxml specified by filename
+  const get_ecu_optinos = async(filename)=>{
+    await axios.get(api , {params:{filename:filename}}).then(
       response =>{
           var data = response.data.data
-          var k = {"label":"root",'children':[]}
-          Object.keys(data).map(async(key)=>{
-            
-            let elem = await transformJson(data[key],key)
-            
-            k['children'].push(elem)
-          })
+          setEcuOptions(data.sort())
          
       }
       ).catch(error =>{
       console.log(error)
-      })
+      });
   }
 
-  const get_parsed_arxml2 = async (filename)=>{
+  //api call to fetch parsed_arxml specified by filename and given ecu
+  const get_parsed_arxml = async (filename,ecu)=>{
+
+    await axios.get(api2 , {params:{filename:filename,ecu:ecu}}).then(
+      response =>{
+          var data = response.data.data
+          console.log(data)
+         
+      }
+      ).catch(error =>{
+      console.log(error)
+      });
+    //sample = response.data.data     
     var Rx = sample.filter((item)=>{
       return item.label.startsWith('Rx')
     })
     var Tx = sample.filter((item)=>{
       return item.label.startsWith('Tx')
     })
-    var r = await transformobj2({"label":"root",'children':Rx},0)
-    var t = await transformobj2({"label":"root",'children':Tx},0)
-    console.log(r)
-    console.log(t)
+    var r = await transformobj({"label":"root",'children':Rx},0)
+    var t = await transformobj({"label":"root",'children':Tx},0)
     setRx(r);
     setTx(t);
-    
-    
   }
   
+ 
+  // Saves data passed to it as config.json
   const saveConfig = (data) =>{
     const json=JSON.stringify(data);
     const blob=new Blob([json],{type:'application/json'})
     FileSaver.saveAs(blob, "config.json");
   }
   
+  // loads data from 
   const loadConfig = async (e) =>{
     var reader = new FileReader();
     var k;
@@ -197,8 +147,7 @@ export function Tree() {
     setRx({})
     reader.onload  =  async function (){
       k = JSON.parse(reader.result)
-      
-      
+      // moddifing rx data according to config
       k.map((item,index)=>{
         var indices = item['_id'].split('-').splice(2)
         
@@ -207,24 +156,17 @@ export function Tree() {
         z['children'][parseInt(indices[0])]['children'][parseInt(indices[1])]['children'] = item['children2']
         z['children'][parseInt(indices[0])]['children'][parseInt(indices[1])]['checked'] = true
         z['children2'][parseInt(indices[0])]['children2'][parseInt(indices[1])]['children2'] = item['children2']
-        
-        
-        
       })
       
       console.log(z)
-      
+      // set Rx and selected nodes in rx according to config data
       await setRX(z)
       setSelected(k)
-      
     }
     reader.readAsText(configFile);
-    
-    
-    
-    
   }
 
+  // loadconfig for Tx
   const loadConfig2 = async (e) =>{
     var reader = new FileReader();
     var k;
@@ -259,7 +201,7 @@ export function Tree() {
         <div >
           <div>
             
-            <UploadFile filename={filename} setFilename = {setFilename} parse={get_parsed_arxml2}/>
+            <UploadFile filename={filename} setFilename = {setFilename} parse={get_parsed_arxml} ecuOptions={ecuOptions} get_ecu_optinos={get_ecu_optinos}/>
             {/* 
             <Proto/> */}
             {/*** Tabbed veiw for RX AND TX  */ }
@@ -291,7 +233,7 @@ export function Tree() {
             </button>
               
 
-            <ToggleSidebar tx={rx} onChange={onChange} forceset= {forceset} setForceSet={setForceSet}/>
+            <ToggleSidebar tx={rx} onChange={onChange}/>
             <ToggleSidebar2 selected2={selected} setSelectData= {setRxValues}/> 
             <DisplayContainer selected2={selected} submit_values={submit_values} handleInpChange={handleInpChange} type="rx" setSelected2={setRxValues}/>
 

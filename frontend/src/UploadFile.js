@@ -1,34 +1,34 @@
 import React, {useState,useEffect} from 'react'
 import axios from 'axios'
 import './App.css'
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+function UploadFile({filename,setFilename,parse,ecuOptions,get_ecu_optinos}) {
 
-function UploadFile({filename,setFilename,parse}) {
-
-    const [files, setFiles] = useState([{}])
-    //good for logging on screen
-    const [status, setstatus] = useState('')
+    const [ecu,setEcu] = useState("")
+    // api to call for
     let api = 'http://127.0.0.1:8000/api'
 
-
+    // function to upload .arxml file and call get_ecu_options to fetch the ecu list
     const saveFile = () =>{
-        console.log('Button clicked')
+        
 
         let formData = new FormData();
         formData.append("file", filename)
         console.log(filename)
+        // seeting headers to send fileobject
         let axiosConfig = {
             headers: {
                 'Content-Type': 'multpart/form-data'
             }
         }
 
-        console.log(formData)
         axios.post(api + '/files/', formData, axiosConfig).then(
             response =>{
                 console.log(response)
-                setstatus('File Uploaded Successfully')
-                parse(filename.name)
-            },
+                
+                get_ecu_optinos(filename.name)
+            }
             
                
         ).catch(error =>{
@@ -37,8 +37,6 @@ function UploadFile({filename,setFilename,parse}) {
     }
 
     
-
-
     return (
     <div>
         <div class="alert alert-success" style={{height :"10%"}} >
@@ -57,21 +55,15 @@ function UploadFile({filename,setFilename,parse}) {
                 Submit
             </button>
             
-            
-            <input
-                type="text"
-                class="form-control"
+            <Dropdown
+                options={ecuOptions}
                 placeholder="Select ECU"
-                aria-label="Select ECU"
-                aria-describedby="button-addon2"
-                onChange={e => setFilename(e.target.files[0])}
+                onChange={(op)=>setEcu(op.label)} 
             />
-             <button class="btn btn-primary" type="button" id="button-addon2" data-mdb-ripple-color="dark" onClick={saveFile} >
+
+            <button class="btn btn-primary" type="button" id="button-addon2" data-mdb-ripple-color="dark" onClick={(e)=>{parse(filename.name,ecu)}} >
                 Submit
             </button>
-           
-            
-
 
         </div>
     </div>    

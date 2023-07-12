@@ -1,6 +1,6 @@
 
 import './App.css';
-import React , {Component, ChangeEvent,useState } from 'react';
+import React , {useState } from 'react';
 import { Tree } from './tree';
 
 function App() {

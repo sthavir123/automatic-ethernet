@@ -8,26 +8,24 @@ const baseURL2 = "http://127.0.0.1:8000/proto/set"
 
 export default function Proto() {
   const [post, setPost] = React.useState(null);
-  // const [text, setText] = React.useState("");
+  
   const [inputs, setInputs] = React.useState({});
   const [filename, setFilename] = React.useState('')
+  
   function handleChange (event,type) {
-    //console.log(event.target);
-    const name = event.target.name;
     
+    const name = event.target.name;
     const value = type === "bool" ? event.target.checked : event.target.value;
     console.log(event.target.checked , event.target.value);
     setInputs(values => ({ ...values, [name]: value }))
   }
   function handleChange2 (option,name){
-    console.log(option);
-    console.log(name);
-    //const name = name;
-    
     const value = option.value;
     setInputs(values => ({ ...values, [name]: value }))
   }
   
+
+  // similar to upload in UploadFile.json 
   const saveFile = () => {
     console.log('Button clicked')
 
@@ -83,6 +81,7 @@ export default function Proto() {
               <form onSubmit={(e) => {
                 e.preventDefault();
                 let data1 = { name: keyName, input: inputs }
+                // post form data to generate payload at backend
                 axios.post(baseURL2, data1).then(
                   response => {
                     console.log(response)
