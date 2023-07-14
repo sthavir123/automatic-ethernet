@@ -1,0 +1,87 @@
+{
+"I-SIGNAL": [
+    [
+        {
+            "label": "isFuelLevelIndicatedHS_0_EVC_CCCM_PR10_Pdu_PduGwISL_80",
+            "LENGTH": "10",
+            "SYSTEM-SIGNAL": [
+                {
+                    "label": "FuelLevelIndicatedHS",
+                    "L-2": "Level of fuel in tank as displayed on the fuel guage. Measured via the fuel level sensors in the tank, converted via ADCs in the IC and then damped using an algorithm."
+                }
+            ],
+            "SW-BASE-TYPE": [
+                {
+                    "label": "UINT10",
+                    "CATEGORY": "FIXED_LENGTH",
+                    "BASE-TYPE-SIZE": "10",
+                    "BASE-TYPE-ENCODING": "NONE"
+                }
+            ],
+            "COMPU-METHOD": [
+                {
+                    "label": "FuelLevelIndicated",
+                    "CATEGORY": "LINEAR",
+                    "LOWER-LIMIT": "0",
+                    "UPPER-LIMIT": "1023",
+                    "COMPU-NUMERATOR": [
+                        "0.0",
+                        "0.2"
+                    ],
+                    "COMPU-DENOMINATOR": [
+                        "1"
+                    ]
+                }
+            ]
+        }
+    ],
+    {
+        "label": "isFuelLevelIndicatedQFHS_0_EVC_CCCM_PR10_Pdu_PduGwISL_80",
+        "LENGTH": "2",
+        "SYSTEM-SIGNAL": [
+            {
+                "label": "FuelLevelIndicatedQFHS",
+                "L-2": "Quality factor of FuelLevelIndicated.\r\n\r\n"
+            }
+        ],
+        "SW-BASE-TYPE": [
+            {
+                "label": "UINT2",
+                "CATEGORY": "FIXED_LENGTH",
+                "BASE-TYPE-SIZE": "2",
+                "BASE-TYPE-ENCODING": "NONE"
+            }
+        ],
+        "COMPU-METHOD": [
+            {
+                "label": "QualityFactor",
+                "CATEGORY": "TEXTTABLE",
+                "SHORT-LABEL": [
+                    "QualityFactor_The_accuracy_of_the_data_is_undefinable_0",
+                    "QualityFactor_Data_is_temporarily_undefinable_evaluation_in_progress_1",
+                    "QualityFactor_The_accuracy_of_the_data_is_not_within_specification_2",
+                    "QualityFactor_The_data_is_calculated_with_the_specified_accuracy_3"
+                ],
+                "LOWER-LIMIT": [
+                    "0",
+                    "1",
+                    "2",
+                    "3"
+                ],
+                "UPPER-LIMIT": [
+                    "0",
+                    "1",
+                    "2",
+                    "3"
+                ],
+                "VT": [
+                    "The accuracy of the data is undefinable",
+                    "Data is temporarily undefinable, evaluation in progress",
+                    "The accuracy of the data is not within specification",
+                    "The data is calculated with the specified accuracy"
+                ]
+            }
+        ]
+    }
+]
+}
